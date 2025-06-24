@@ -1,12 +1,12 @@
 <script setup type="ts">
-const props: String = defineProps({
+const props = defineProps({
     status: {
         type: Number,
         required: true,
     },
 });
 
-const titleMap: String = {
+const titleMap = {
     503: '503',
     500: '500',
     404: '404',
