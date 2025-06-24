@@ -22,3 +22,7 @@ yarn-error.log
 /.vscode
 /.zed
 .DS_Store
+
+/bootstrap/ssr
+/bootstrap/ssr/*
+/bootstrap

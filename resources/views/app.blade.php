@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html class="transition-all duration-500 scroll-smooth" lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+<html class="transition-all duration-500 scroll-smooth" lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" @class(['dark'=> ($appearance ?? 'system') == 'dark'])>
 
 <head>
     <!-- Base Meta -->
     @inertiaHead
 
-    <meta property="og:image" content="{{ env('APP_URL') }}/assets/images/icons/icon.webp" />
+    <meta property="og:image" content="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
     <meta property="og:type" content="website" />
-    <meta property="twitter:image" content="{{ env('APP_URL') }}/assets/images/icons/icon.webp" />
+    <meta property="twitter:image" content="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta property="og:url" content="{{ url()->current() }}" />
     <meta property="twitter:url" content="{{ url()->current() }}" />
@@ -19,30 +19,55 @@
     <!-- Meta -->
 
     <!-- Favicon -->
-    <link rel="apple-touch-icon" href="{{ env('APP_URL') }}/assets/images/icons/icon.webp" />
-    <link rel="apple-touch-icon" sizes="57x57" href="{{ env('APP_URL') }}/assets/images/icons/icon.webp" />
-    <link rel="apple-touch-icon" sizes="60x60" href="{{ env('APP_URL') }}/assets/images/icons/icon.webp" />
-    <link rel="apple-touch-icon" sizes="72x72" href="{{ env('APP_URL') }}/assets/images/icons/icon.webp" />
-    <link rel="apple-touch-icon" sizes="76x76" href="{{ env('APP_URL') }}/assets/images/icons/icon.webp" />
-    <link rel="apple-touch-icon" sizes="114x114" href="{{ env('APP_URL') }}/assets/images/icons/icon.webp" />
-    <link rel="apple-touch-icon" sizes="120x120" href="{{ env('APP_URL') }}/assets/images/icons/icon.webp" />
-    <link rel="apple-touch-icon" sizes="144x144" href="{{ env('APP_URL') }}/assets/images/icons/icon.webp" />
-    <link rel="apple-touch-icon" sizes="152x152" href="{{ env('APP_URL') }}/assets/images/icons/icon.webp" />
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ env('APP_URL') }}/assets/images/icons/icon.webp" />
+    <link rel="apple-touch-icon" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
+    <link rel="apple-touch-icon" sizes="57x57" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
+    <link rel="apple-touch-icon" sizes="60x60" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
+    <link rel="apple-touch-icon" sizes="72x72" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
+    <link rel="apple-touch-icon" sizes="76x76" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
+    <link rel="apple-touch-icon" sizes="114x114" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
+    <link rel="apple-touch-icon" sizes="120x120" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
+    <link rel="apple-touch-icon" sizes="144x144" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
+    <link rel="apple-touch-icon" sizes="152x152" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
 
-    <link rel="icon" type="image/png" sizes="192x192" href="{{ env('APP_URL') }}/assets/images/icons/icon.webp" />
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ env('APP_URL') }}/assets/images/icons/icon.webp" />
-    <link rel="icon" type="image/png" sizes="96x96" href="{{ env('APP_URL') }}/assets/images/icons/icon.webp" />
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ env('APP_URL') }}/assets/images/icons/icon.webp" />
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
 
-    <link rel="shortcut icon" href="{{ env('APP_URL') }}/assets/images/icons/icon.webp" />
+    <link rel="shortcut icon" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
     <!-- Favicon -->
 
     <!-- Assets -->
+
+    {{-- Inline script to detect system dark mode preference and apply it immediately --}}
+    <script>
+        (function() {
+            const appearance = '{{ $appearance ?? "system" }}';
+
+            if (appearance === 'system') {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+                if (prefersDark) {
+                    document.documentElement.classList.add('dark');
+                }
+            }
+        })();
+    </script>
+
+    {{-- Inline style to set the HTML background color based on our theme in app.css --}}
+    <style>
+        html {
+            background-color: oklch(1 0 0);
+        }
+
+        html.dark {
+            background-color: oklch(0.145 0 0);
+        }
+    </style>
     @routes
-    @vite(['resources/css/app.css', 'resources/js/app.js', "resources/js/pages/{$page['component']}.vue"])
+    @vite(['resources/css/app.css', 'resources/js/app.ts'])
     @laravelPWA
-    @inertiaTrans
     <!-- Assets -->
 </head>
 

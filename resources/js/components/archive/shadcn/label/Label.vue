@@ -1,27 +1,33 @@
 <script setup>
-import { cn } from '@/libraries/shadcn/utils.js';
-import { Label } from 'radix-vue';
+import { cn } from '@/lib/shadcn/utils';
+import { Label } from 'reka-ui';
 import { computed } from 'vue';
 
 const props = defineProps({
-    for: { type: String, required: false },
-    asChild: { type: Boolean, required: false },
-    as: { type: null, required: false },
-    class: { type: null, required: false },
+  for: { type: String, required: false },
+  asChild: { type: Boolean, required: false },
+  as: { type: null, required: false },
+  class: { type: null, required: false },
 });
 
 const delegatedProps = computed(() => {
-    const { class: _, ...delegated } = props;
+  const { class: _, ...delegated } = props;
 
-    return delegated;
+  return delegated;
 });
 </script>
 
 <template>
-    <Label
-        v-bind="delegatedProps"
-        :class="cn('text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70', props.class)"
-    >
-        <slot />
-    </Label>
+  <Label
+    data-slot="label"
+    v-bind="delegatedProps"
+    :class="
+      cn(
+        'flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50',
+        props.class,
+      )
+    "
+  >
+    <slot />
+  </Label>
 </template>

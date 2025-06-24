@@ -9,9 +9,8 @@ Route::prefix(LaravelLocalization::setLocale())->middleware(['localeSessionRedir
     function () {
 
         Route::get('/', function () {
-            return Inertia::render('home/pages/index');
+            return Inertia::render('Welcome');
         })->name('home.index');
-
     }
 );
 
@@ -21,4 +20,5 @@ Route::get('/{any}', function () {
     ]);
 })->where('any', '.*');
 
-// URL::forceHttps();
+// Force SSL
+app()->environment('production') ? URL::forceHttps() : null;

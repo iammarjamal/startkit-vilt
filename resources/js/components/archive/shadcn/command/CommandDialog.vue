@@ -1,12 +1,24 @@
 <script setup>
-import { Dialog, DialogContent } from '@/components/shadcn/dialog';
-import { useForwardPropsEmits } from 'radix-vue';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/shadcn/dialog';
+import { useForwardPropsEmits } from 'reka-ui';
 import Command from './Command.vue';
 
 const props = defineProps({
   open: { type: Boolean, required: false },
   defaultOpen: { type: Boolean, required: false },
   modal: { type: Boolean, required: false },
+  title: { type: String, required: false, default: 'Command Palette' },
+  description: {
+    type: String,
+    required: false,
+    default: 'Search for a command to run...',
+  },
 });
 const emits = defineEmits(['update:open']);
 
@@ -15,10 +27,12 @@ const forwarded = useForwardPropsEmits(props, emits);
 
 <template>
   <Dialog v-bind="forwarded">
-    <DialogContent class="p-0 overflow-hidden shadow-lg !border-0">
-      <Command
-        class="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5"
-      >
+    <DialogHeader class="sr-only">
+      <DialogTitle>{{ title }}</DialogTitle>
+      <DialogDescription>{{ description }}</DialogDescription>
+    </DialogHeader>
+    <DialogContent class="overflow-hidden p-0">
+      <Command>
         <slot />
       </Command>
     </DialogContent>

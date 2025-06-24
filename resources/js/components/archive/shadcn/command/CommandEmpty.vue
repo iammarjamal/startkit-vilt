@@ -1,23 +1,34 @@
 <script setup>
-import { cn } from '@/libraries/shadcn/utils.js';
-import { ComboboxEmpty } from 'radix-vue';
+import { cn } from '@/lib/shadcn/utils';
+import { Primitive } from 'reka-ui';
 import { computed } from 'vue';
+import { useCommand } from '.';
 
 const props = defineProps({
-    asChild: { type: Boolean, required: false },
-    as: { type: null, required: false },
-    class: { type: null, required: false },
+  asChild: { type: Boolean, required: false },
+  as: { type: null, required: false },
+  class: { type: null, required: false },
 });
 
 const delegatedProps = computed(() => {
-    const { class: _, ...delegated } = props;
+  const { class: _, ...delegated } = props;
 
-    return delegated;
+  return delegated;
 });
+
+const { filterState } = useCommand();
+const isRender = computed(
+  () => !!filterState.search && filterState.filtered.count === 0,
+);
 </script>
 
 <template>
-    <ComboboxEmpty v-bind="delegatedProps" :class="cn('py-6 text-center text-sm', props.class)">
-        <slot />
-    </ComboboxEmpty>
+  <Primitive
+    v-if="isRender"
+    data-slot="command-empty"
+    v-bind="delegatedProps"
+    :class="cn('py-6 text-center text-sm', props.class)"
+  >
+    <slot />
+  </Primitive>
 </template>

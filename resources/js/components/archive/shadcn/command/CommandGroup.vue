@@ -1,35 +1,52 @@
 <script setup>
-import { cn } from '@/libraries/shadcn/utils.js';
-import { ComboboxGroup, ComboboxLabel } from 'radix-vue';
-import { computed } from 'vue';
+import { cn } from '@/lib/shadcn/utils';
+import { ListboxGroup, ListboxGroupLabel, useId } from 'reka-ui';
+import { computed, onMounted, onUnmounted } from 'vue';
+import { provideCommandGroupContext, useCommand } from '.';
 
 const props = defineProps({
-    asChild: { type: Boolean, required: false },
-    as: { type: null, required: false },
-    class: { type: null, required: false },
-    heading: { type: String, required: false },
+  asChild: { type: Boolean, required: false },
+  as: { type: null, required: false },
+  class: { type: null, required: false },
+  heading: { type: String, required: false },
 });
 
 const delegatedProps = computed(() => {
-    const { class: _, ...delegated } = props;
+  const { class: _, ...delegated } = props;
 
-    return delegated;
+  return delegated;
+});
+
+const { allGroups, filterState } = useCommand();
+const id = useId();
+
+const isRender = computed(() =>
+  !filterState.search ? true : filterState.filtered.groups.has(id),
+);
+
+provideCommandGroupContext({ id });
+onMounted(() => {
+  if (!allGroups.value.has(id)) allGroups.value.set(id, new Set());
+});
+onUnmounted(() => {
+  allGroups.value.delete(id);
 });
 </script>
 
 <template>
-    <ComboboxGroup
-        v-bind="delegatedProps"
-        :class="
-            cn(
-                'text-foreground !border-secondary-light dark:!border-secondary-dark [&_[cmdk-group-heading]]:text-muted-foreground overflow-hidden p-1 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium',
-                props.class,
-            )
-        "
+  <ListboxGroup
+    v-bind="delegatedProps"
+    :id="id"
+    data-slot="command-group"
+    :class="cn('text-foreground overflow-hidden p-1', props.class)"
+    :hidden="isRender ? undefined : true"
+  >
+    <ListboxGroupLabel
+      v-if="heading"
+      class="px-2 py-1.5 text-xs font-medium text-muted-foreground"
     >
-        <ComboboxLabel v-if="heading" class="text-muted-foreground px-2 py-1.5 text-xs font-medium">
-            {{ heading }}
-        </ComboboxLabel>
-        <slot />
-    </ComboboxGroup>
+      {{ heading }}
+    </ListboxGroupLabel>
+    <slot />
+  </ListboxGroup>
 </template>

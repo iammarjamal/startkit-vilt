@@ -1,5 +1,5 @@
 <script setup>
-import { PopoverRoot, useForwardPropsEmits } from 'radix-vue';
+import { PopoverRoot, useForwardPropsEmits } from 'reka-ui';
 
 const props = defineProps({
   defaultOpen: { type: Boolean, required: false },
@@ -12,7 +12,7 @@ const forwarded = useForwardPropsEmits(props, emits);
 </script>
 
 <template>
-  <PopoverRoot v-bind="forwarded">
+  <PopoverRoot data-slot="popover" v-bind="forwarded">
     <slot />
   </PopoverRoot>
 </template>

@@ -1,45 +1,36 @@
 <script setup>
-import { cn } from '@/libraries/shadcn/utils.js';
-import { ComboboxContent, useForwardPropsEmits } from 'radix-vue';
+import { cn } from '@/lib/shadcn/utils';
+import { ListboxContent, useForwardProps } from 'reka-ui';
 import { computed } from 'vue';
 
 const props = defineProps({
-    forceMount: { type: Boolean, required: false },
-    position: { type: String, required: false },
-    bodyLock: { type: Boolean, required: false },
-    dismissable: { type: Boolean, required: false, default: false },
-    side: { type: null, required: false },
-    sideOffset: { type: Number, required: false },
-    align: { type: null, required: false },
-    alignOffset: { type: Number, required: false },
-    avoidCollisions: { type: Boolean, required: false },
-    collisionBoundary: { type: null, required: false },
-    collisionPadding: { type: [Number, Object], required: false },
-    arrowPadding: { type: Number, required: false },
-    sticky: { type: String, required: false },
-    hideWhenDetached: { type: Boolean, required: false },
-    updatePositionStrategy: { type: String, required: false },
-    prioritizePosition: { type: Boolean, required: false },
-    asChild: { type: Boolean, required: false },
-    as: { type: null, required: false },
-    disableOutsidePointerEvents: { type: Boolean, required: false },
-    class: { type: null, required: false },
+  asChild: { type: Boolean, required: false },
+  as: { type: null, required: false },
+  class: { type: null, required: false },
 });
-const emits = defineEmits(['escapeKeyDown', 'pointerDownOutside', 'focusOutside', 'interactOutside']);
 
 const delegatedProps = computed(() => {
-    const { class: _, ...delegated } = props;
+  const { class: _, ...delegated } = props;
 
-    return delegated;
+  return delegated;
 });
 
-const forwarded = useForwardPropsEmits(delegatedProps, emits);
+const forwarded = useForwardProps(delegatedProps);
 </script>
 
 <template>
-    <ComboboxContent v-bind="forwarded" :class="cn('max-h-[300px] overflow-x-hidden overflow-y-auto', props.class)">
-        <div role="presentation">
-            <slot />
-        </div>
-    </ComboboxContent>
+  <ListboxContent
+    data-slot="command-list"
+    v-bind="forwarded"
+    :class="
+      cn(
+        'max-h-[300px] scroll-py-1 overflow-x-hidden overflow-y-auto',
+        props.class,
+      )
+    "
+  >
+    <div role="presentation">
+      <slot />
+    </div>
+  </ListboxContent>
 </template>

@@ -1,46 +1,96 @@
-<script setup>
-import { onBeforeMount, ref, watch } from 'vue';
-import { useStorage } from '@vueuse/core';
-import 'animate.css';
+<script setup lang="ts">
+import type { SidebarProps } from '.'
+import { cn } from '@/lib/utils'
+import { Sheet, SheetContent } from '@/components/ui/sheet'
+import SheetDescription from '@/components/ui/sheet/SheetDescription.vue'
+import SheetHeader from '@/components/ui/sheet/SheetHeader.vue'
+import SheetTitle from '@/components/ui/sheet/SheetTitle.vue'
+import { SIDEBAR_WIDTH_MOBILE, useSidebar } from './utils'
 
-import {
-    ResizableHandle,
-    ResizablePanel,
-    ResizablePanelGroup,
-} from '@/Components/ui/resizable';
+defineOptions({
+  inheritAttrs: false,
+})
 
-const props = defineProps({
-    isOpen: {
-        type: Boolean
-    },
+const props = withDefaults(defineProps<SidebarProps>(), {
+  side: 'left',
+  variant: 'sidebar',
+  collapsible: 'offcanvas',
+})
 
-    class: {
-        type: String,
-    }
-});
-
-const StorageLanguage = useStorage('language');
-
-const isOpen = ref(props.isOpen);
-
-watch(() => props.isOpen, (newVal) => {
-    isOpen.value = newVal;
-});
+const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
 </script>
 
 <template>
-    <Transition enter-active-class="animate__animated animate__fadeIn animate__faster"
-        leave-active-class="animate__animated animate__fadeOut animate__faster">
-        <div v-show="isOpen" @click="isOpen = false"
-            class="fixed inset-0 z-20 transition-all duration-300 bg-black/70 lg:hidden"></div>
-    </Transition>
+  <div
+    v-if="collapsible === 'none'"
+    data-slot="sidebar"
+    :class="cn('bg-sidebar text-sidebar-foreground flex h-full w-(--sidebar-width) flex-col', props.class)"
+    v-bind="$attrs"
+  >
+    <slot />
+  </div>
 
-    <Transition
-        :enter-active-class="StorageLanguage === 'en' ? 'animate__animated animate__slideInLeft animate__faster' : 'animate__animated animate__slideInRight animate__faster'"
-        :leave-active-class="StorageLanguage === 'en' ? 'animate__animated animate__slideOutLeft animate__faster' : 'animate__animated animate__slideOutRight animate__faster'">
-        <aside v-show="isOpen"
-            :class="[props.class, 'fixed inset-y-0 z-40 w-64 min-h-screen m-0 h-full overflow-y-scroll scrollbar-hide transition-all transform border-t-0 border-b-0 border-e start-0 md:w-72 lg:w-80 bg-light dark:bg-dark border-secondary-light dark:border-secondary-dark lg:static']">
-            <slot></slot>
-        </aside>
-    </Transition>
+  <Sheet v-else-if="isMobile" :open="openMobile" v-bind="$attrs" @update:open="setOpenMobile">
+    <SheetContent
+      data-sidebar="sidebar"
+      data-slot="sidebar"
+      data-mobile="true"
+      :side="side"
+      class="bg-sidebar text-sidebar-foreground w-(--sidebar-width) p-0 [&>button]:hidden"
+      :style="{
+        '--sidebar-width': SIDEBAR_WIDTH_MOBILE,
+      }"
+    >
+      <SheetHeader class="sr-only">
+        <SheetTitle>Sidebar</SheetTitle>
+        <SheetDescription>Displays the mobile sidebar.</SheetDescription>
+      </SheetHeader>
+      <div class="flex h-full w-full flex-col">
+        <slot />
+      </div>
+    </SheetContent>
+  </Sheet>
+
+  <div
+    v-else
+    class="group peer text-sidebar-foreground hidden md:block"
+    data-slot="sidebar"
+    :data-state="state"
+    :data-collapsible="state === 'collapsed' ? collapsible : ''"
+    :data-variant="variant"
+    :data-side="side"
+  >
+    <!-- This is what handles the sidebar gap on desktop  -->
+    <div
+      :class="cn(
+        'relative w-(--sidebar-width) bg-transparent transition-[width] duration-200 ease-linear',
+        'group-data-[collapsible=offcanvas]:w-0',
+        'group-data-[side=right]:rotate-180',
+        variant === 'floating' || variant === 'inset'
+          ? 'group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))]'
+          : 'group-data-[collapsible=icon]:w-(--sidebar-width-icon)',
+      )"
+    />
+    <div
+      :class="cn(
+        'fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex',
+        side === 'left'
+          ? 'left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]'
+          : 'right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]',
+        // Adjust the padding for floating and inset variants.
+        variant === 'floating' || variant === 'inset'
+          ? 'p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)]'
+          : 'group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[side=left]:border-r group-data-[side=right]:border-l',
+        props.class,
+      )"
+      v-bind="$attrs"
+    >
+      <div
+        data-sidebar="sidebar"
+        class="bg-sidebar group-data-[variant=floating]:border-sidebar-border flex h-full w-full flex-col group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:shadow-sm"
+      >
+        <slot />
+      </div>
+    </div>
+  </div>
 </template>
