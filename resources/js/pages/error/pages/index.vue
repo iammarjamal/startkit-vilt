@@ -1,4 +1,4 @@
-<script setup type="ts">
+<script setup>
 const props = defineProps({
     status: {
         type: Number,
