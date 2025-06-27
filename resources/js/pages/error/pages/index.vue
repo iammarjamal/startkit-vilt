@@ -20,7 +20,7 @@ const description = computed(() => descriptionMap[props.status] || 'An unexpecte
 <template>
     <div class="flex h-full min-h-screen flex-col place-content-center items-center justify-center px-4">
         <div class="h-full">
-            <h1 class="text-dark/60 dark:text-light/60 text-9xl">{{ title }}</h1>
+            <h1 class="text-black/60 dark:text-white/60 text-9xl">{{ title }}</h1>
         </div>
     </div>
 </template>

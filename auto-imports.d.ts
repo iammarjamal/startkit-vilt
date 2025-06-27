@@ -7,6 +7,8 @@
 export {}
 declare global {
   const EffectScope: typeof import('vue')['EffectScope']
+  const Head: typeof import('@inertiajs/vue3')['Head']
+  const Link: typeof import('@inertiajs/vue3')['Link']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
   const autoResetRef: typeof import('@vueuse/core')['autoResetRef']
   const computed: typeof import('vue')['computed']

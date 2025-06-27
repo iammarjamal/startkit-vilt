@@ -1,12 +1,12 @@
+import tailwindcss from '@tailwindcss/vite';
 import vue from '@vitejs/plugin-vue';
 import laravel from 'laravel-vite-plugin';
 import path from 'path';
-import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 
+import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
-import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
 
 import MotionResolver from 'motion-v/resolver';
 import RekaResolver from 'reka-ui/resolver';
@@ -36,7 +36,7 @@ export default defineConfig({
                     dayjs: [['default', 'dayjs']],
                 },
                 {
-                    '@inertiajs/vue3': ['useForm', 'usePage'],
+                    '@inertiajs/vue3': ['useForm', 'usePage', 'Head', 'Link'],
                 },
                 {
                     'vue-i18n': ['useI18n', ['t', 'useI18n']],
