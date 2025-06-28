@@ -12,8 +12,10 @@ export function updateTheme(value: Appearance) {
         const systemTheme = mediaQueryList.matches ? 'dark' : 'light';
 
         document.documentElement.classList.toggle('dark', systemTheme === 'dark');
-    } else {
-        document.documentElement.classList.toggle('dark', value === 'dark');
+    } else if (value === 'dark') {
+        document.documentElement.classList.add('dark');
+    } else if (value === 'light') {
+        document.documentElement.classList.remove('dark');
     }
 }
 
@@ -46,7 +48,9 @@ const getStoredAppearance = () => {
 const handleSystemThemeChange = () => {
     const currentAppearance = getStoredAppearance();
 
-    updateTheme(currentAppearance || 'system');
+    if (currentAppearance === 'system') {
+        updateTheme('system');
+    }
 };
 
 export function initializeTheme() {
@@ -56,7 +60,12 @@ export function initializeTheme() {
 
     // Initialize theme from saved preference or default to system...
     const savedAppearance = getStoredAppearance();
-    updateTheme(savedAppearance || 'system');
+
+    if (savedAppearance) {
+        updateTheme(savedAppearance);
+    } else {
+        updateTheme('system');
+    }
 
     // Set up system theme change listener...
     mediaQuery()?.addEventListener('change', handleSystemThemeChange);
@@ -74,6 +83,7 @@ export function useAppearance() {
     });
 
     function updateAppearance(value: Appearance) {
+        console.log('Updating appearance to:', value);
         appearance.value = value;
 
         // Store in localStorage for client-side persistence...

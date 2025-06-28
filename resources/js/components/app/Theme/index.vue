@@ -8,17 +8,16 @@ Props:
 - tabs: show as button group (like AppearanceTabs)
 -->
 <script setup>
-import Select from "@/components/ui/select/Select.vue";
-import { Icon } from '@iconify/vue';
 import { useAppearance } from '@/composables/useAppearance';
+import { Icon } from '@iconify/vue';
 
 const { t } = useI18n();
 
 const props = defineProps({
     icon: { type: Boolean, default: false },
-    iconClass: { type: String, default: "" },
+    iconClass: { type: String, default: '' },
     inline: { type: Boolean, default: false },
-    inlineClass: { type: String, default: "" },
+    inlineClass: { type: String, default: '' },
     tabs: { type: Boolean, default: false },
 });
 
@@ -33,15 +32,15 @@ watch(selectOption, (value) => {
 });
 
 const options = computed(() => [
-  { value: "light", label: t("body.lightMode"), selected: appearance.value === "light" },
-  { value: "system", label: t("body.autoMode"), selected: appearance.value === "system" },
-  { value: "dark", label: t("body.darkMode"), selected: appearance.value === "dark" },
+    { value: 'light', label: t('body.lightMode'), selected: appearance.value === 'light' },
+    { value: 'system', label: t('body.autoMode'), selected: appearance.value === 'system' },
+    { value: 'dark', label: t('body.darkMode'), selected: appearance.value === 'dark' },
 ]);
 
 const tabsList = [
-  { value: 'light', icon: 'lucide:sun', label: t('body.lightMode') },
-  { value: 'dark', icon: 'lucide:moon', label: t('body.darkMode') },
-  { value: 'system', icon: 'lucide:monitor', label: t('body.autoMode') },
+    { value: 'light', icon: 'mdi:weather-sunny', label: t('body.lightMode') },
+    { value: 'dark', icon: 'mdi:weather-night', label: t('body.darkMode') },
+    { value: 'system', icon: 'mdi:monitor', label: t('body.autoMode') },
 ];
 
 // Get current theme for icon display
@@ -60,34 +59,23 @@ const currentTheme = computed(() => {
 // Get icon based on current theme
 const themeIcon = computed(() => {
     if (appearance.value === 'system') {
-        return 'radix-icons:half-2';
+        return 'mdi:monitor';
     }
-    return appearance.value === 'light' ? 'mynaui:sun' : 'mynaui:moon';
+    return appearance.value === 'light' ? 'mdi:weather-sunny' : 'mdi:weather-night';
 });
 </script>
 
 <template>
     <!-- Icon button mode -->
-    <div v-if="icon" ref="themeRef" @click="updateAppearance(currentTheme.value === 'dark' ? 'light' : 'dark')" class="select-none">
-        <a href="#" class="cursor-pointer">
-            <AppIcon
-                :name="themeIcon"
-                size="24"
-                class="text-[var(--primary)] dark:text-[var(--primary-foreground)]"
-                :class="iconClass"
-            />
+    <div v-if="icon" ref="themeRef" class="select-none">
+        <a href="#" class="cursor-pointer" @click="updateAppearance(currentTheme.value === 'dark' ? 'light' : 'dark')">
+            <AppIcon :name="themeIcon" size="24" class="text-[var(--primary)] dark:text-[var(--primary-foreground)]" :class="iconClass" />
         </a>
     </div>
     <!-- Inline select mode -->
     <div v-else-if="inline" class="flex items-center justify-between">
-        <h1 class="text-xl font-bold text-[var(--primary)]">{{ t("body.theme") }}</h1>
-        <Select
-            :placeholder="t('body.selectPlaceholder')"
-            :options="options"
-            :selected="appearance"
-            v-model="selectOption"
-            :key="appearance"
-        />
+        <h1 class="text-xl font-bold text-[var(--primary)]">{{ t('body.theme') }}</h1>
+        <AppSelect :placeholder="t('body.selectPlaceholder')" :options="options" :selected="appearance" v-model="selectOption" :key="appearance" />
     </div>
     <!-- Tabs button group mode (AppearanceTabs) -->
     <div v-else-if="tabs" class="inline-flex gap-1 rounded-lg bg-[var(--muted)] p-1 dark:bg-[var(--background)]">

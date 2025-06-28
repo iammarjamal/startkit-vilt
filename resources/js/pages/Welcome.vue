@@ -30,10 +30,11 @@ import { Head, Link } from '@inertiajs/vue3';
                     >
                         Register
                     </Link> -->
-                    <AppTheme :icon="true" />
+                    <Theme :inline="true" />
                 </template>
             </nav>
         </header>
+
         <div class="flex w-full items-center justify-center opacity-100 transition-opacity duration-750 lg:grow starting:opacity-0">
             <main class="flex w-full max-w-[335px] flex-col-reverse overflow-hidden rounded lg:max-w-4xl lg:flex-row">
                 <div

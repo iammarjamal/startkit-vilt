@@ -6,10 +6,10 @@ Props:
 - v-model: selected value
 -->
 <script setup>
-import { Button } from '@/components/shadcn/button';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/shadcn/command';
-import { Drawer, DrawerContent, DrawerTrigger } from '@/components/shadcn/drawer';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/shadcn/popover';
+import { Button } from '@/components/ui/button';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 const props = defineProps({
     options: {

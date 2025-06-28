@@ -45,7 +45,7 @@ export default defineConfig({
         }),
         Components({
             dirs: ['resources/js/components'],
-            directoryAsNamespace: true,
+            directoryAsNamespace: false,
             deep: true,
             extensions: ['vue', 'ts'],
             resolvers: [RekaResolver(), MotionResolver()],
