@@ -6,10 +6,6 @@ import { defineConfig } from 'vite';
 
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
 import AutoImport from 'unplugin-auto-import/vite';
-import Components from 'unplugin-vue-components/vite';
-
-import MotionResolver from 'motion-v/resolver';
-import RekaResolver from 'reka-ui/resolver';
 
 export default defineConfig({
     base: '/',
@@ -42,13 +38,6 @@ export default defineConfig({
                     'vue-i18n': ['useI18n', ['t', 'useI18n']],
                 },
             ],
-        }),
-        Components({
-            dirs: ['resources/js/components'],
-            directoryAsNamespace: false,
-            deep: true,
-            extensions: ['vue', 'ts'],
-            resolvers: [RekaResolver(), MotionResolver()],
         }),
         VueI18nPlugin(),
     ],

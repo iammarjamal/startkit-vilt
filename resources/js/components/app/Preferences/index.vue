@@ -39,7 +39,7 @@ const { t } = useI18n();
     </Modal>
 </template>
 
-<i18n>
+<i18n lang="json">
 {
     "ar": {
         "body": {

@@ -24,18 +24,23 @@ const forwardedProps = useForwardProps(delegatedProps)
     v-bind="forwardedProps"
     :class="
       cn(
-        `focus:bg-accent focus:text-accent-foreground [&_svg:not([class*='text-'])]:text-muted-foreground relative flex w-full cursor-default items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2`,
+        'relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 text-sm outline-none transition-colors',
+        'focus:bg-accent focus:text-accent-foreground',
+        'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+        'ltr:ps-2 ltr:pe-8 rtl:ps-8 rtl:pe-2',
         props.class,
       )
     "
   >
-    <span class="absolute right-2 flex size-3.5 items-center justify-center">
+    <!-- Check Icon Container -->
+    <div class="absolute flex items-center justify-center right-2 rtl:right-auto rtl:left-2">
       <SelectItemIndicator>
         <Check class="size-4" />
       </SelectItemIndicator>
-    </span>
+    </div>
 
-    <SelectItemText>
+    <!-- Text Content -->
+    <SelectItemText class="flex-1">
       <slot />
     </SelectItemText>
   </SelectItem>

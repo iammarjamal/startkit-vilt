@@ -1,36 +1,23 @@
 <script setup lang="ts">
-import AppLogoIcon from '@/components/AppLogoIcon.vue';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Link } from '@inertiajs/vue3';
+import Logo from '@/components/app/Logo/index.vue';
+import type { BreadcrumbItemType } from '@/types';
 
-defineProps<{
-    title?: string;
-    description?: string;
-}>();
+interface Props {
+    breadcrumbs?: BreadcrumbItemType[];
+}
+
+withDefaults(defineProps<Props>(), {
+    breadcrumbs: () => [],
+});
 </script>
 
 <template>
-    <div class="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
-        <div class="flex w-full max-w-md flex-col gap-6">
-            <Link :href="route('home')" class="flex items-center gap-2 self-center font-medium">
-                <div class="flex h-9 w-9 items-center justify-center">
-                    <AppLogoIcon class="size-9 fill-current text-black dark:text-white" />
-                </div>
-            </Link>
-
-            <div class="flex flex-col gap-6">
-                <Card class="rounded-xl">
-                    <CardHeader class="px-10 pt-8 pb-0 text-center">
-                        <CardTitle class="text-xl">{{ title }}</CardTitle>
-                        <CardDescription>
-                            {{ description }}
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent class="px-10 py-8">
-                        <slot />
-                    </CardContent>
-                </Card>
+    <div class="flex min-h-screen flex-col items-center justify-center bg-[var(--background)] p-6">
+        <div class="w-full max-w-sm">
+            <div class="mb-8 flex justify-center">
+                <Logo class="size-9 fill-current text-black dark:text-white" />
             </div>
+            <slot />
         </div>
     </div>
 </template>

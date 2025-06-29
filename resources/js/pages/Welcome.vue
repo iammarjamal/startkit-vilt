@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Theme from '@/components/app/Theme/index.vue';
 import { Head, Link } from '@inertiajs/vue3';
 </script>
 
@@ -30,7 +31,7 @@ import { Head, Link } from '@inertiajs/vue3';
                     >
                         Register
                     </Link> -->
-                    <Theme :inline="true" />
+                    <Theme :tabs="true" />
                 </template>
             </nav>
         </header>
