@@ -2,62 +2,102 @@
 Usage:
 <Logo />
 <Logo iconOnly />
+<Logo theme="dark" />
+<Logo theme="light" />
 Props:
 - iconOnly: show only icon without text
+- theme: force theme color (dark/light)
 -->
 <script setup>
-import useTheme from '@/libraries/theme/theme';
 import { Link } from '@inertiajs/vue3';
-import { useMediaQuery, useStorage } from '@vueuse/core';
-import { computed, defineProps, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 const props = defineProps({
     class: { type: String, default: '' },
     type: { type: String, default: 'logo' },
-    iconOnly: { type: Boolean, default: false },
+    lang: { type: String, default: '' },
+    theme: { type: String, default: '' }, // 'dark' or 'light'
 });
 
-const EnvDev = import.meta.env.DEV;
-const baseURL = EnvDev ? 'https://rqeim.com.test' : '';
-const prefersDarkScheme = useMediaQuery('(prefers-color-scheme: dark)');
+// reactive language (SSR/CSR safe)
+const language = ref(props.lang || 'ar');
+// reactive theme (SSR/CSR safe)
+const isDark = ref(false);
 
-const language = ref('');
-const storageLanguage = useStorage('language', 'ar');
+function detectLanguage() {
+    // 1. من props
+    if (props.lang) return props.lang;
+    // 2. من مسار الرابط إذا كان url/{lang}/...
+    if (typeof window !== 'undefined') {
+        const match = window.location.pathname.match(/^\/?([a-zA-Z]{2})(\/|$)/);
+        if (match && (match[1] === 'ar' || match[1] === 'en')) {
+            return match[1];
+        }
+        // 3. من localStorage
+        if (window.localStorage && localStorage.getItem('language')) {
+            return localStorage.getItem('language');
+        }
+        // 4. من document.documentElement.lang
+        if (window.document && document.documentElement.lang) {
+            return document.documentElement.lang;
+        }
+    }
+    // 5. افتراضي
+    return 'ar';
+}
 
+function detectTheme() {
+    if (typeof window !== 'undefined') {
+        return document.documentElement.classList.contains('dark') || document.body.classList.contains('dark');
+    }
+    return false;
+}
+
+// تحديث اللغة والثيم عند التركيب والتفاعل
 onMounted(() => {
-    language.value = storageLanguage.value;
-});
+    language.value = detectLanguage();
+    isDark.value = detectTheme();
 
-const { isDark } = useTheme();
+    // تحديث عند تغيير اللغة في localStorage أو تغيير الثيم
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'language') {
+            language.value = detectLanguage();
+        }
+    });
+    const observer = new MutationObserver(() => {
+        isDark.value = detectTheme();
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+});
 
 const imagePath = computed(() => {
-    const types = {
-        'icon-box': 'icons/icon',
-        'icon-dark': 'icons/icon-dark',
-        'icon-light': 'icons/icon-light',
-        logo: `logos/logo-${language.value === 'ar' ? 'ar' : 'en'}-${isDark.value ? 'light' : 'dark'}`,
-    };
-    return `${baseURL}/assets/images/${types[props.type]}.webp`;
-});
+    // إذا كان هناك theme محدد، استخدمه
+    const forcedTheme = props.theme === 'dark' || props.theme === 'light';
+    const themeToUse = forcedTheme ? props.theme : isDark.value ? 'light' : 'dark';
 
-watch(storageLanguage, (newValue) => {
-    language.value = newValue;
+    if (props.type === 'icon') {
+        return themeToUse === 'dark' ? '/assets/images/icons/icon-dark.webp' : '/assets/images/icons/icon-light.webp';
+    }
+    return `/assets/images/logos/logo-${language.value === 'ar' ? 'ar' : 'en'}-${themeToUse}.webp`;
 });
 </script>
 
 <template>
-    <div class="w-full cursor-pointer">
-        <Link :href="route('home.index')" prefetch="click">
-            <div class="max-w-24">
-                <img v-if="type !== 'logo'" :src="imagePath" :alt="type.replace('icon-', '')" :class="[props.class, 'object-contain']" />
-
+    <Link :href="route('auth.index')">
+        <div class="max-w-24">
+            <Transition
+                enter-active-class="transition-opacity duration-500 ease-in"
+                enter-from-class="absolute opacity-0"
+                enter-to-class="opacity-100"
+            >
                 <img
-                    v-if="type === 'logo'"
+                    :key="imagePath"
                     :src="imagePath"
                     :alt="`Logo ${language} ${isDark ? 'Light' : 'Dark'}`"
                     :class="[props.class, 'object-contain']"
                 />
-            </div>
-        </Link>
-    </div>
+            </Transition>
+        </div>
+    </Link>
 </template>

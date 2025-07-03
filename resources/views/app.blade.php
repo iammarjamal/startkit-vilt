@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html class="transition-all duration-500 scroll-smooth" lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" @class(['dark'=> ($appearance ?? 'system') == 'dark'])>
+<html class="transition-all duration-1000 scroll-smooth" lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" @class(['dark'=> ($appearance ?? 'system') == 'dark'])>
 
 <head>
     <!-- Base Meta -->
-    @inertiaHead
+    @if(!empty($page))
+        @inertiaHead
+    @endif
 
     <meta property="og:image" content="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
     <meta property="og:type" content="website" />
@@ -72,7 +74,9 @@
 </head>
 
 <body class="bg-light dark:bg-dark">
-    @inertia
+    @if(!empty($page))
+        @inertia
+    @endif
     <!-- OR -->
     @yield('slot')
 

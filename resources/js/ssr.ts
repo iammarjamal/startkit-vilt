@@ -13,7 +13,7 @@ createServer(
         createInertiaApp({
             page,
             render: renderToString,
-            title: (title) => (title ? `${title} - ${appName}` : appName),
+            title: (title) => (title ? `${title}` : appName),
             resolve: resolvePage,
             setup: ({ App, props, plugin }) => {
                 const locale = props.initialPage.props.app?.locale ?? 'ar';

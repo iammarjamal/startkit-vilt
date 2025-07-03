@@ -46,10 +46,6 @@ class HandleInertiaRequests extends Middleware
                 'locale' => app()->getLocale(),
                 'url' => request()->getSchemeAndHttpHost(),
             ],
-            'quote' => [
-                'message' => trim($message),
-                'author' => trim($author)
-            ],
             'auth' => [
                 'user' => $request->user(),
             ],

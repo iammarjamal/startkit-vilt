@@ -49,11 +49,16 @@ const themeIcon = computed(() => {
     return appearance.value === 'light' ? 'mdi:weather-sunny' : 'mdi:weather-night';
 });
 
-// Cycle through themes
+const shouldAnimate = ref(false);
+
 const cycleTheme = () => {
     const themes = ['light', 'dark', 'system'];
     const nextIndex = (themes.indexOf(appearance.value) + 1) % themes.length;
+    shouldAnimate.value = true;
     updateAppearance(themes[nextIndex]);
+    setTimeout(() => {
+        shouldAnimate.value = false;
+    }, 600);
 };
 
 // Long press to reset to system
@@ -71,7 +76,11 @@ watch(appearance, (newValue) => {
 // Watch for changes in selectedValue and update appearance
 watch(selectedValue, (newValue) => {
     if (newValue && newValue !== appearance.value) {
+        shouldAnimate.value = true;
         updateAppearance(newValue);
+        setTimeout(() => {
+            shouldAnimate.value = false;
+        }, 600);
     }
 });
 
@@ -86,49 +95,60 @@ onMounted(() => {
 
 // Drawer state
 const drawerOpen = ref(false);
+
+const animationProps = computed(() => {
+    if (appearance.value === 'system') {
+        return {
+            initial: { scale: 0.5, opacity: 0 },
+            animate: { scale: 1, opacity: 1 },
+            exit: { scale: 0.5, opacity: 0 },
+            transition: { duration: 0.4, type: 'spring' },
+        };
+    } else if (appearance.value === 'dark') {
+        return {
+            initial: { rotate: -180, opacity: 0 },
+            animate: { rotate: 0, opacity: 1 },
+            exit: { rotate: 180, opacity: 0 },
+            transition: { duration: 0.4, type: 'spring' },
+        };
+    } else {
+        // light
+        return {
+            initial: { rotate: -180, opacity: 0 },
+            animate: { rotate: 0, opacity: 1 },
+            exit: { rotate: 180, opacity: 0 },
+            transition: { duration: 0.4, type: 'spring' },
+        };
+    }
+});
 </script>
 
 <template>
     <!-- Icon button mode -->
     <div v-if="icon" ref="themeRef" class="select-none">
-        <Motion
-            :initial="{ scale: 0.8, opacity: 0 }"
-            :animate="{ scale: 1, opacity: 1 }"
-            :whileHover="{ scale: 1.05 }"
-            :whileTap="{ scale: 0.95 }"
-            transition="{ duration: 0.3 }"
+        <button
+            type="button"
+            class="cursor-pointer rounded-md p-2 transition-colors hover:bg-[var(--muted)]/50 dark:hover:bg-[var(--muted)]/30"
+            @click="cycleTheme"
+            :title="t('body.theme')"
         >
-            <button
-                type="button"
-                class="cursor-pointer rounded-md p-2 transition-colors hover:bg-[var(--muted)]/50 dark:hover:bg-[var(--muted)]/30"
-                @click="cycleTheme"
-                :title="t('body.theme')"
-            >
-                <Motion
-                    :key="themeIcon"
-                    :initial="{ rotate: -180, scale: 0.8 }"
-                    :animate="{ rotate: 0, scale: 1 }"
-                    :exit="{ rotate: 180, scale: 0.8 }"
-                    transition="{ duration: 0.4, type: 'spring' }"
-                >
-                    <Icon
-                        :icon="themeIcon"
-                        class="h-5 w-5 text-[var(--foreground)] transition-colors dark:text-[var(--foreground)]"
-                        :class="iconClass"
-                    />
-                </Motion>
-            </button>
-        </Motion>
+            <Motion v-if="shouldAnimate" :key="themeIcon" v-bind="animationProps">
+                <Icon :icon="themeIcon" class="h-5 w-5 text-[var(--foreground)] transition-colors dark:text-[var(--foreground)]" :class="iconClass" />
+            </Motion>
+            <Icon
+                v-else
+                :icon="themeIcon"
+                class="h-5 w-5 text-[var(--foreground)] transition-colors dark:text-[var(--foreground)]"
+                :class="iconClass"
+            />
+        </button>
     </div>
 
     <!-- Inline select mode -->
     <div v-else-if="inline" class="flex items-center justify-between">
-        <Motion :initial="{ x: -20, opacity: 0 }" :animate="{ x: 0, opacity: 1 }" transition="{ duration: 0.5 }">
-            <h1 class="text-right text-xl font-bold text-[var(--foreground)] dark:text-[var(--foreground)]">
-                {{ t('body.theme') }}
-            </h1>
-        </Motion>
-
+        <h1 class="text-right text-xl font-bold text-[var(--foreground)] dark:text-[var(--foreground)]">
+            {{ t('body.theme') }}
+        </h1>
         <!-- Mobile: Drawer Select -->
         <Drawer v-if="isMobile" v-model:open="drawerOpen">
             <DrawerTrigger as-child>
@@ -150,60 +170,49 @@ const drawerOpen = ref(false);
                     </DrawerTitle>
                 </DrawerHeader>
                 <div class="space-y-3 p-6">
-                    <Motion
+                    <button
                         v-for="(option, index) in options"
                         :key="option.value"
-                        :initial="{ x: 50, opacity: 0, scale: 0.9 }"
-                        :animate="{ x: 0, opacity: 1, scale: 1 }"
-                        :whileHover="{ scale: 1.02 }"
-                        :whileTap="{ scale: 0.98 }"
-                        :transition="{ delay: index * 0.1, duration: 0.3, type: 'spring' }"
+                        @click="
+                            () => {
+                                selectedValue = option.value;
+                                drawerOpen = false;
+                            }
+                        "
+                        :class="[
+                            'flex w-full items-center gap-3 rounded-lg p-4 text-right transition-all duration-200',
+                            'border-2 hover:border-[var(--primary)]/50',
+                            selectedValue === option.value
+                                ? 'border-[var(--primary)] bg-[var(--primary)]/10 text-[var(--primary)]'
+                                : 'border-transparent text-[var(--foreground)] hover:bg-[var(--muted)] dark:text-[var(--foreground)] dark:hover:bg-[var(--muted)]',
+                        ]"
                     >
-                        <button
-                            @click="
-                                () => {
-                                    selectedValue = option.value;
-                                    drawerOpen = false;
-                                }
-                            "
-                            :class="[
-                                'flex w-full items-center gap-3 rounded-lg p-4 text-right transition-all duration-200',
-                                'border-2 hover:border-[var(--primary)]/50',
-                                selectedValue === option.value
-                                    ? 'border-[var(--primary)] bg-[var(--primary)]/10 text-[var(--primary)]'
-                                    : 'border-transparent text-[var(--foreground)] hover:bg-[var(--muted)] dark:text-[var(--foreground)] dark:hover:bg-[var(--muted)]',
-                            ]"
+                        <Motion
+                            v-if="selectedValue === option.value"
+                            :initial="{ scale: 0, opacity: 0 }"
+                            :animate="{ scale: 1, opacity: 1 }"
+                            transition="{ duration: 0.2 }"
+                            class="ms-auto"
                         >
-                            <Motion :initial="{ rotate: -90 }" :animate="{ rotate: 0 }" transition="{ duration: 0.3, delay: index * 0.1 }">
-                                <Icon :icon="option.icon" class="h-6 w-6" />
-                            </Motion>
-                            <div class="flex flex-col text-start">
-                                <span class="font-medium">{{ option.label }}</span>
-                                <span class="text-xs text-[var(--muted-foreground)]">
-                                    {{
-                                        option.value === 'light'
-                                            ? t('body.lightDescription')
-                                            : option.value === 'dark'
-                                              ? t('body.darkDescription')
-                                              : t('body.systemDescription')
-                                    }}
-                                </span>
-                            </div>
-                            <Motion
-                                v-if="selectedValue === option.value"
-                                :initial="{ scale: 0, opacity: 0 }"
-                                :animate="{ scale: 1, opacity: 1 }"
-                                transition="{ duration: 0.2 }"
-                                class="ms-auto"
-                            >
-                                <Icon icon="mdi:check-circle" class="h-5 w-5 text-[var(--primary)]" />
-                            </Motion>
-                        </button>
-                    </Motion>
+                            <Icon icon="mdi:check-circle" class="h-5 w-5 text-[var(--primary)]" />
+                        </Motion>
+                        <Icon :icon="option.icon" class="h-6 w-6" />
+                        <div class="flex flex-col text-start">
+                            <span class="font-medium">{{ option.label }}</span>
+                            <span class="text-xs text-[var(--muted-foreground)]">
+                                {{
+                                    option.value === 'light'
+                                        ? t('body.lightDescription')
+                                        : option.value === 'dark'
+                                          ? t('body.darkDescription')
+                                          : t('body.systemDescription')
+                                }}
+                            </span>
+                        </div>
+                    </button>
                 </div>
             </DrawerContent>
         </Drawer>
-
         <!-- Desktop: Regular Select -->
         <Select v-else v-model="selectedValue">
             <SelectTrigger
@@ -212,27 +221,29 @@ const drawerOpen = ref(false);
                 <SelectValue :placeholder="t('body.selectPlaceholder')" />
             </SelectTrigger>
             <SelectContent class="border-[var(--border)] bg-[var(--background)] dark:border-[var(--border)] dark:bg-[var(--background)]">
-                <Motion
+                <SelectItem
                     v-for="(option, index) in options"
                     :key="option.value"
-                    :initial="{ y: 10, opacity: 0 }"
-                    :animate="{ y: 0, opacity: 1 }"
-                    :transition="{ delay: index * 0.1 }"
+                    :value="option.value"
+                    class="text-[var(--foreground)] hover:bg-[var(--muted)] focus:bg-[var(--muted)] dark:text-[var(--foreground)] dark:hover:bg-[var(--muted)] dark:focus:bg-[var(--muted)]"
                 >
-                    <SelectItem
-                        :value="option.value"
-                        class="text-[var(--foreground)] hover:bg-[var(--muted)] focus:bg-[var(--muted)] dark:text-[var(--foreground)] dark:hover:bg-[var(--muted)] dark:focus:bg-[var(--muted)]"
-                    >
-                        <div class="flex items-center gap-2 rtl:flex-row-reverse">
-                            <Icon :icon="option.icon" class="h-4 w-4" />
-                            <span>{{ option.label }}</span>
-                        </div>
-                    </SelectItem>
-                </Motion>
+                    <div class="flex items-center gap-2 rtl:flex-row-reverse">
+                        <Icon :icon="option.icon" class="h-4 w-4" />
+                        <span>{{ option.label }}</span>
+                        <Motion
+                            v-if="selectedValue === option.value"
+                            :initial="{ scale: 0, opacity: 0 }"
+                            :animate="{ scale: 1, opacity: 1 }"
+                            transition="{ duration: 0.2 }"
+                            class="ms-auto"
+                        >
+                            <Icon icon="mdi:check-circle" class="h-5 w-5 text-[var(--primary)]" />
+                        </Motion>
+                    </div>
+                </SelectItem>
             </SelectContent>
         </Select>
     </div>
-
     <!-- Tabs mode using UI components -->
     <div v-else-if="tabs">
         <Tabs v-model="selectedValue">

@@ -1,87 +1,93 @@
 <!--
 Usage:
-<Splash />
+<Splash v-model:show="isLoading" :once="false" :time="1000" />
+<Splash :once="true" />
+Props:
+- time: مدة العرض بالمللي ثانية (افتراضي 2000)
+- once: إذا true (افتراضي)، يظهر مرة واحدة فقط في الجلسة. إذا false يظهر كل مرة.
+- modelValue: تحكم خارجي (boolean)، إذا true يظهر السبلاش (مطلوب مع once=false)
 -->
 <script setup>
-import 'animate.css';
-import { gsap } from 'gsap';
-import { onMounted, ref } from 'vue';
-
 import Logo from '@/components/app/Logo/index.vue';
-import { useStorage } from '@vueuse/core';
+import { Icon } from '@iconify/vue';
+import { useSessionStorage } from '@vueuse/core';
+import { onMounted, ref, watch } from 'vue';
 
+const emit = defineEmits(['update:modelValue']);
 const props = defineProps({
     time: {
         type: Number,
         default: 2000,
     },
+    once: {
+        type: Boolean,
+        default: true,
+    },
+    modelValue: {
+        type: Boolean,
+        default: undefined,
+    },
 });
 
 const visible = ref(false);
-const bubble = ref(null);
-const bubblePulse = ref(null);
+const isDark = ref(false);
+const splashShown = useSessionStorage('splashShown', null);
+
+function detectTheme() {
+    if (typeof window !== 'undefined') {
+        return document.documentElement.classList.contains('dark') || document.body.classList.contains('dark');
+    }
+    return false;
+}
+
+function showSplash() {
+    visible.value = true;
+    setTimeout(() => {
+        visible.value = false;
+        if (props.modelValue !== undefined) {
+            emit('update:modelValue', false);
+        } else if (props.once) {
+            splashShown.value = true;
+        }
+    }, props.time);
+}
 
 onMounted(() => {
-    const splashShown = localStorage.getItem('splashShown');
-
-    if (!splashShown) {
-        visible.value = true;
-        setTimeout(() => {
-            visible.value = false;
-            sessionStorage.setItem('splashShown', 'true');
-        }, props.time);
+    if (typeof window !== 'undefined') {
+        isDark.value = detectTheme();
+        const observer = new MutationObserver(() => {
+            isDark.value = detectTheme();
+        });
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+        observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+        if (props.modelValue !== undefined) {
+            if (props.modelValue) showSplash();
+        } else if (props.once) {
+            if (!splashShown.value) showSplash();
+        } else {
+            showSplash();
+        }
     }
-
-    const timeline = gsap.timeline({
-        repeat: -1, // Loop the animation infinitely
-        onComplete: () => timeline.restart(),
-    });
-
-    timeline.to(
-        bubblePulse.value,
-        {
-            scale: 0.9,
-            opacity: 1,
-            duration: 0.8,
-        },
-        '-=0.6',
-    );
-
-    timeline.to(
-        bubblePulse.value,
-        {
-            scale: 3,
-            opacity: 0,
-            duration: 1.1,
-            ease: 'expo.out',
-        },
-        '-=1.2',
-    );
 });
 
-const isTheme = useStorage('theme');
+watch(
+    () => props.modelValue,
+    (val) => {
+        if (val) showSplash();
+    },
+);
 </script>
 
 <template>
     <div
-        v-show="visible"
-        class="fixed inset-0 z-[999999] flex h-screen w-screen flex-col items-center justify-center space-y-5 overflow-hidden bg-[var(--background)] shadow-[var(--shadow)] shadow-xl before:absolute before:inset-0 before:-translate-x-full before:-skew-x-12 before:animate-[shimmer_2s_infinite] before:border-t before:border-[var(--border)] before:bg-gradient-to-r before:from-transparent before:via-[var(--muted)] before:to-transparent dark:bg-[var(--background)] dark:shadow-[var(--shadow)] dark:before:border-[var(--border)] dark:before:via-[var(--muted)]"
+        v-if="props.modelValue !== undefined ? visible : visible"
+        :class="['fixed inset-0 z-[999999] flex items-center justify-center', isDark ? 'bg-opacity-90 bg-black' : 'bg-opacity-90 bg-white']"
     >
-        <div class="relative">
-            <!-- Bubble wrapper -->
-            <div
-                ref="bubble"
-                class="relative z-10 flex h-[100px] w-[100px] items-center justify-center rounded-full border border-transparent object-cover"
-            >
-                <Logo
-                    :type="(isTheme === 'auto' && useMediaQuery('(prefers-color-scheme: dark)')) || isTheme === 'dark' ? 'icon-light' : 'icon-dark'"
-                />
+        <div class="relative flex flex-col items-center justify-center">
+            <div class="absolute inset-0 z-10 m-auto flex h-24 w-24 items-center justify-center rounded-full">
+                <Logo type="icon" :theme="isDark ? 'light' : 'dark'" />
             </div>
-            <!-- Pulse effect -->
-            <div
-                ref="bubblePulse"
-                class="absolute top-1/2 left-1/2 z-0 -mt-[60px] -ml-[60px] h-[120px] w-[120px] scale-0 transform rounded-full bg-[var(--secondary)] opacity-0 dark:bg-[var(--secondary)]"
-            ></div>
+            <Icon icon="svg-spinners:pulse-multiple" :class="[isDark ? 'text-white' : 'text-black', 'opacity-50']" style="font-size: 24rem" />
         </div>
     </div>
 </template>
