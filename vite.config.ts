@@ -3,7 +3,6 @@ import vue from '@vitejs/plugin-vue';
 import laravel from 'laravel-vite-plugin';
 import path from 'path';
 import { defineConfig } from 'vite';
-
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
 import AutoImport from 'unplugin-auto-import/vite';
 
@@ -35,7 +34,7 @@ export default defineConfig({
                     '@inertiajs/vue3': ['useForm', 'usePage', 'Head', 'Link'],
                 },
                 {
-                    'vue-i18n': ['useI18n', ['t', 'useI18n']],
+                    'vue-i18n': ['useI18n'],
                 },
             ],
         }),
