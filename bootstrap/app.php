@@ -7,6 +7,8 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,7 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
+        $middleware->encryptCookies(except: ['appearance']);
 
         $middleware->web(append: [
             HandleAppearance::class,
@@ -41,5 +43,21 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectGuestsTo(fn(Request $request) => route('auth.index'));
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
-    })->create();
+        $exceptions->render(function (Throwable $exception, Request $request) {
+            if (app()->environment('production')) {
+                $status = 500;
+
+                if ($exception instanceof HttpExceptionInterface) {
+                    $status = $exception->getStatusCode();
+                }
+
+                return Inertia::render('error/pages/index', [
+                    'status' => $status,
+                    'error' => get_class($exception),
+                ])->toResponse($request)->setStatusCode($status);
+            }
+
+            return null;
+        });
+    })
+    ->create();

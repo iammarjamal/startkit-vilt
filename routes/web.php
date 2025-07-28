@@ -14,11 +14,5 @@ Route::prefix(LaravelLocalization::setLocale())->middleware(['localeSessionRedir
     }
 );
 
-Route::get('/{any}', function () {
-    return Inertia::render('error/pages/index', [
-        'status' => 404,
-    ]);
-})->where('any', '.*');
-
 // Force SSL
 app()->environment('production') ? URL::forceHttps() : null;

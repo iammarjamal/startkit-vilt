@@ -1,12 +1,9 @@
 <script setup>
-import Splash from '@/components/app/Splash/index.vue';
-import { Head, usePage } from '@inertiajs/vue3';
-import { useMediaQuery } from '@vueuse/core';
-import { computed } from 'vue';
+import { Head } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 
-const page = usePage();
-const { t: i18nT } = useI18n();
+import Splash from '@/components/app/Splash/index.vue';
+
 const props = defineProps({
     title: {
         type: String,
@@ -31,19 +28,15 @@ const isDesktop = useMediaQuery('(min-width: 768px)');
     <Head>
         <title inertia>{{ t('name') }} - {{ title }}</title>
         <meta name="description" :content="desc" />
-
         <meta property="og:site_name" :content="title" />
         <meta property="og:title" :content="title" />
         <meta property="og:description" :content="desc" />
-
         <meta property="twitter:title" :content="title" />
         <meta property="twitter:description" :content="desc" />
     </Head>
 
-    <!-- Splash Screen (shows only once) -->
     <Splash />
 
-    <!-- App -->
     <main>
         <div class="desktop flex h-full flex-col" v-if="isDesktop">
             <slot></slot>
@@ -52,18 +45,19 @@ const isDesktop = useMediaQuery('(min-width: 768px)');
             <slot></slot>
         </div>
     </main>
-    <!-- App -->
 </template>
 
 <i18n>
-    {
-        "ar": {
-            'name': 'رقيم'
-        },
-        "en": {
-            'name': 'Rqeim'
-        }
+{
+    "ar": {
+        "name": "وصول",
+        "حدث خطأ": "حدث خطأ أثناء المعالجة"
+    },
+    "en": {
+        "name": "Wosul",
+        "حدث خطأ": "An error occurred"
     }
+}
 </i18n>
 
 <style scoped>
