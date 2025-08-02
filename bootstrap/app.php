@@ -44,7 +44,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (Throwable $exception, Request $request) {
-            if (app()->environment('production')) {
+            if (!config('app.debug')) {
                 $status = 500;
 
                 if ($exception instanceof HttpExceptionInterface) {
