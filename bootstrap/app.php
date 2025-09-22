@@ -51,7 +51,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     $status = $exception->getStatusCode();
                 }
 
-                return Inertia::render('error/pages/index', [
+                return Inertia::render('error/index', [
                     'status' => $status,
                     'error' => get_class($exception),
                 ])->toResponse($request)->setStatusCode($status);

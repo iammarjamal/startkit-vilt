@@ -77,7 +77,7 @@ const imagePath = computed(() => {
     const themeToUse = forcedTheme ? props.theme : isDark.value ? 'light' : 'dark';
 
     if (props.type === 'icon') {
-        return themeToUse === 'dark' ? '/assets/images/icons/icon-dark.webp' : '/assets/images/icons/icon-light.webp';
+        return themeToUse === 'dark' ? '/assets/images/icons/icon.webp' : '/assets/images/icons/icon.webp';
     }
     return `/assets/images/logos/logo-${language.value === 'ar' ? 'ar' : 'en'}-${themeToUse}.webp`;
 });

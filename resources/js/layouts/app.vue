@@ -1,7 +1,5 @@
 <script setup>
 import { Head } from '@inertiajs/vue3';
-import { useI18n } from 'vue-i18n';
-
 import Splash from '@/components/app/Splash/index.vue';
 
 const props = defineProps({
@@ -25,6 +23,7 @@ const isDesktop = useMediaQuery('(min-width: 768px)');
 </script>
 
 <template>
+
     <Head>
         <title inertia>{{ t('name') }} - {{ title }}</title>
         <meta name="description" :content="desc" />
@@ -47,18 +46,16 @@ const isDesktop = useMediaQuery('(min-width: 768px)');
     </main>
 </template>
 
-<i18n>
-{
+<i18n lang="json">{
     "ar": {
-        "name": "وصول",
-        "حدث خطأ": "حدث خطأ أثناء المعالجة"
+        "name": "رقيم",
+        "error_occurred": "حدث خطأ أثناء المعالجة"
     },
     "en": {
-        "name": "Wosul",
-        "حدث خطأ": "An error occurred"
+        "name": "Rqeim",
+        "error_occurred": "An error occurred"
     }
-}
-</i18n>
+}</i18n>
 
 <style scoped>
 .phone * {

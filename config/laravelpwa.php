@@ -9,8 +9,8 @@ return [
         'background_color' => '#ffffff',
         'theme_color' => '#000000',
         'display' => 'standalone',
-        'orientation'=> 'any',
-        'status_bar'=> 'black-translucent',
+        'orientation' => 'any',
+        'status_bar' => 'black-translucent',
         'icons' => [
             '72x72' => [
                 'path' => '/assets/images/icons/icon.webp',
@@ -47,4 +47,4 @@ return [
         ],
         'custom' => []
     ]
-    ];
+];

@@ -1,3 +1,12 @@
+import "../css/app.css";
+import "@fontsource/ibm-plex-sans-arabic/100.css";
+import "@fontsource/ibm-plex-sans-arabic/200.css";
+import "@fontsource/ibm-plex-sans-arabic/300.css";
+import "@fontsource/ibm-plex-sans-arabic/400.css";
+import "@fontsource/ibm-plex-sans-arabic/500.css";
+import "@fontsource/ibm-plex-sans-arabic/600.css";
+import "@fontsource/ibm-plex-sans-arabic/700.css";
+
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import type { DefineComponent } from 'vue';

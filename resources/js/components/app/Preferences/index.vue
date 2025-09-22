@@ -1,32 +1,40 @@
-<!--
-Usage:
-<Preferences />
-Shows a modal for user preferences (theme, language, etc).
--->
 <script setup>
 import { useI18n } from 'vue-i18n';
-import Modal from '@/components/ui/dialog/index.vue';
+import { ref } from 'vue'; // Import ref for v-model:open
+import { useMediaQuery } from '@vueuse/core'; // Import useMediaQuery
+
+// Import the specific components from your UI library
+// Assuming these are the paths to your Dialog and Drawer components
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '@/components/ui/dialog';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerTrigger } from '@/components/ui/drawer';
+
 import Theme from '@/components/app/Theme/index.vue';
 import Language from '@/components/app/Language/index.vue';
 
 const { t } = useI18n();
+
+// Reactive variable to control the open state of the dialog/drawer
+const isOpen = ref(false);
+
+// Determine if the screen is desktop size
+// Adjust the breakpoint (768px) as per your project's definition of desktop
+const isDesktop = useMediaQuery('(min-width: 768px)');
 </script>
 
 <template>
-    <Modal>
-        <template #button>
+    <Dialog v-if="isDesktop" :open="isOpen">
+        <DialogTrigger as-child>
             <slot></slot>
-        </template>
+        </DialogTrigger>
 
-        <template #title>
-            <h1 class="text-[var(--primary)]">{{ t('body.title') }}</h1>
-        </template>
+        <DialogContent class="sm:max-w-lg">
+            <DialogHeader>
+                <DialogTitle>{{ t('body.title') }}</DialogTitle>
+                <DialogDescription>
+                    {{ t('body.desc') }}
+                </DialogDescription>
+            </DialogHeader>
 
-        <template #desc>
-            <p class="text-[var(--muted-foreground)]">{{ t('body.desc') }}</p>
-        </template>
-
-        <template #body>
             <div class="flex flex-col gap-y-3">
                 <div class="py-2 pb-5 border-b border-[var(--border)] dark:border-[var(--border)]">
                     <Language inline />
@@ -35,8 +43,32 @@ const { t } = useI18n();
                     <Theme inline />
                 </div>
             </div>
-        </template>
-    </Modal>
+            </DialogContent>
+    </Dialog>
+
+    <Drawer v-else :open="isOpen">
+        <DrawerTrigger as-child>
+            <slot></slot>
+        </DrawerTrigger>
+
+        <DrawerContent>
+            <DrawerHeader class="text-start mt-3">
+                <DrawerTitle>{{ t('body.title') }}</DrawerTitle>
+                <DrawerDescription>
+                    {{ t('body.desc') }}
+                </DrawerDescription>
+            </DrawerHeader>
+
+            <div class="flex flex-col gap-y-3 px-4 pb-4 mb-7">
+                <div class="py-2 pb-5 border-b border-[var(--border)] dark:border-[var(--border)]">
+                    <Language inline />
+                </div>
+                <div class="py-2">
+                    <Theme inline />
+                </div>
+            </div>
+            </DrawerContent>
+    </Drawer>
 </template>
 
 <i18n lang="json">

@@ -79,15 +79,17 @@ watch(
 </script>
 
 <template>
-    <div
-        v-if="props.modelValue !== undefined ? visible : visible"
-        :class="['fixed inset-0 z-[999999] flex items-center justify-center', isDark ? 'bg-opacity-90 bg-black' : 'bg-opacity-90 bg-white']"
-    >
-        <div class="relative flex flex-col items-center justify-center">
-            <div class="absolute inset-0 z-10 m-auto flex h-24 w-24 items-center justify-center rounded-full">
-                <Logo type="icon" :theme="isDark ? 'light' : 'dark'" />
+    <Teleport to="body">
+        <div
+            v-if="props.modelValue !== undefined ? visible : visible"
+            :class="['fixed inset-0 z-[999999] flex items-center justify-center', isDark ? 'bg-opacity-90 bg-black' : 'bg-opacity-90 bg-white']"
+        >
+            <div class="relative flex flex-col items-center justify-center">
+                <div class="absolute inset-0 z-10 m-auto flex h-24 w-24 items-center justify-center rounded-full">
+                    <Logo type="icon" :theme="isDark ? 'light' : 'dark'" />
+                </div>
+                <Icon icon="svg-spinners:pulse-multiple" :class="[isDark ? 'text-white' : 'text-black', 'opacity-50']" style="font-size: 24rem" />
             </div>
-            <Icon icon="svg-spinners:pulse-multiple" :class="[isDark ? 'text-white' : 'text-black', 'opacity-50']" style="font-size: 24rem" />
         </div>
-    </div>
+    </Teleport>
 </template>

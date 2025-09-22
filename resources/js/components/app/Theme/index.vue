@@ -146,7 +146,7 @@ const animationProps = computed(() => {
 
     <!-- Inline select mode -->
     <div v-else-if="inline" class="flex items-center justify-between">
-        <h1 class="text-right text-xl font-bold text-[var(--foreground)] dark:text-[var(--foreground)]">
+        <h1 class="text-start text-xl font-bold text-[var(--foreground)] dark:text-[var(--foreground)]">
             {{ t('body.theme') }}
         </h1>
         <!-- Mobile: Drawer Select -->
@@ -155,7 +155,7 @@ const animationProps = computed(() => {
                 <button
                     class="flex w-[180px] items-center justify-between rounded-md border-[var(--border)] bg-[var(--background)] px-3 py-2 text-sm text-[var(--foreground)] dark:border-[var(--border)] dark:bg-[var(--background)] dark:text-[var(--foreground)]"
                 >
-                    <div class="flex items-center gap-2 text-right">
+                    <div class="flex items-center gap-2 text-start">
                         <Icon :icon="options.find((opt) => opt.value === selectedValue)?.icon || 'mdi:theme-light-dark'" class="h-4 w-4" />
                         <span>{{ options.find((opt) => opt.value === selectedValue)?.label || t('body.selectPlaceholder') }}</span>
                     </div>
@@ -164,12 +164,12 @@ const animationProps = computed(() => {
             </DrawerTrigger>
             <DrawerContent>
                 <DrawerHeader>
-                    <DrawerTitle class="flex items-center gap-2 text-right">
+                    <DrawerTitle class="flex items-center gap-2 text-start">
                         <Icon icon="mdi:theme-light-dark" class="h-5 w-5" />
                         {{ t('body.theme') }}
                     </DrawerTitle>
                 </DrawerHeader>
-                <div class="space-y-3 p-6">
+                <div class="w-full flex flex-col justify-start items-center space-y-3 p-6">
                     <button
                         v-for="(option, index) in options"
                         :key="option.value"
@@ -180,22 +180,13 @@ const animationProps = computed(() => {
                             }
                         "
                         :class="[
-                            'flex w-full items-center gap-3 rounded-lg p-4 text-right transition-all duration-200',
+                            'flex w-full items-center gap-3 rounded-lg p-4 text-start transition-all duration-200',
                             'border-2 hover:border-[var(--primary)]/50',
                             selectedValue === option.value
                                 ? 'border-[var(--primary)] bg-[var(--primary)]/10 text-[var(--primary)]'
                                 : 'border-transparent text-[var(--foreground)] hover:bg-[var(--muted)] dark:text-[var(--foreground)] dark:hover:bg-[var(--muted)]',
                         ]"
                     >
-                        <Motion
-                            v-if="selectedValue === option.value"
-                            :initial="{ scale: 0, opacity: 0 }"
-                            :animate="{ scale: 1, opacity: 1 }"
-                            transition="{ duration: 0.2 }"
-                            class="ms-auto"
-                        >
-                            <Icon icon="mdi:check-circle" class="h-5 w-5 text-[var(--primary)]" />
-                        </Motion>
                         <Icon :icon="option.icon" class="h-6 w-6" />
                         <div class="flex flex-col text-start">
                             <span class="font-medium">{{ option.label }}</span>
@@ -209,6 +200,15 @@ const animationProps = computed(() => {
                                 }}
                             </span>
                         </div>
+                        <Motion
+                            v-if="selectedValue === option.value"
+                            :initial="{ scale: 0, opacity: 0 }"
+                            :animate="{ scale: 1, opacity: 1 }"
+                            transition="{ duration: 0.2 }"
+                            class="ms-auto"
+                        >
+                            <Icon icon="mdi:check-circle" class="h-5 w-5 text-[var(--primary)]" />
+                        </Motion>
                     </button>
                 </div>
             </DrawerContent>
@@ -230,15 +230,6 @@ const animationProps = computed(() => {
                     <div class="flex items-center gap-2 rtl:flex-row-reverse">
                         <Icon :icon="option.icon" class="h-4 w-4" />
                         <span>{{ option.label }}</span>
-                        <Motion
-                            v-if="selectedValue === option.value"
-                            :initial="{ scale: 0, opacity: 0 }"
-                            :animate="{ scale: 1, opacity: 1 }"
-                            transition="{ duration: 0.2 }"
-                            class="ms-auto"
-                        >
-                            <Icon icon="mdi:check-circle" class="h-5 w-5 text-[var(--primary)]" />
-                        </Motion>
                     </div>
                 </SelectItem>
             </SelectContent>
