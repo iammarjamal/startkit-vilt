@@ -43,7 +43,7 @@ const isDesktop = useMediaQuery('(min-width: 768px)');
             <slot></slot>
         </div>
         <div class="scrollbar-hide phone h-full select-none" v-else>
-            <slot></slot>
+            <slot />
         </div>
     </main>
 </template>

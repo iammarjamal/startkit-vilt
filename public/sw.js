@@ -1,0 +1,154 @@
+const e=self;e.skipWaiting();const i="static-cache-v1";e.addEventListener("install",t=>{console.log("[SW] Installing..."),t.waitUntil(Promise.resolve())});e.addEventListener("activate",t=>{t.waitUntil((async()=>{const n=await caches.keys();await Promise.all(n.filter(a=>a!==i).map(a=>caches.delete(a))),e.registration.navigationPreload&&await e.registration.navigationPreload.enable(),await e.clients.claim(),console.log("[SW] Activated")})())});e.addEventListener("fetch",t=>{const{request:n}=t;n.method!=="GET"||!new URL(n.url).protocol.startsWith("http")||n.mode==="navigate"&&t.respondWith((async()=>{try{const o=await t.preloadResponse;return o||await fetch(n)}catch{return new Response(`<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لا يوجد اتصال بالإنترنت</title>
+    <style>
+        /* إعادة تعيين بسيطة */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            /* ألوان داكنة رسمية */
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: #ffffff;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 32rem;
+            width: 100%;
+        }
+
+        .icon {
+            font-size: 6rem;
+            margin-bottom: 1.25rem;
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        p {
+            font-size: 1.125rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.625;
+            color: #cbd5e1;
+        }
+
+        .retry-btn {
+            background-color: #ffffff;
+            color: #0f172a;
+            border: none;
+            padding: 14px 32px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .retry-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            background-color: #f8fafc;
+        }
+
+        .retry-btn:active {
+            transform: translateY(0);
+        }
+
+        .footer-text {
+            margin-top: 1.5rem;
+            font-size: 0.875rem;
+            opacity: 0.7;
+            color: #94a3b8;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .5;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="icon">📡</div>
+        <h1 id="main-title">لا يوجد اتصال بالإنترنت</h1>
+        <p id="description">يبدو أنك غير متصل بالإنترنت. يرجى التحقق من اتصالك والمحاولة مرة أخرى.</p>
+
+        <button onclick="window.location.reload()" class="retry-btn" id="retry-btn">
+            إعادة المحاولة
+        </button>
+
+        <div class="footer-text" id="footer-text">
+            سيتم إعادة الاتصال تلقائياً عند توفر الإنترنت
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // نصوص الترجمة
+            const translations = {
+                ar: {
+                    pageTitle: "لا يوجد اتصال بالإنترنت",
+                    title: "لا يوجد اتصال بالإنترنت",
+                    desc: "يبدو أنك غير متصل بالإنترنت. يرجى التحقق من اتصالك والمحاولة مرة أخرى.",
+                    btn: "إعادة المحاولة",
+                    footer: "سيتم إعادة الاتصال تلقائياً عند توفر الإنترنت"
+                },
+                en: {
+                    pageTitle: "No Internet Connection",
+                    title: "No Internet Connection",
+                    desc: "It seems you are offline. Please check your network connection and try again.",
+                    btn: "Try Again",
+                    footer: "Connection will be restored automatically when available"
+                }
+            };
+
+            // اكتشاف لغة المتصفح
+            // إذا كانت اللغة تبدأ بـ "ar" نعتبرها عربية، وإلا نعتبرها إنجليزية
+            const userLang = navigator.language || navigator.userLanguage;
+            const isArabic = userLang.startsWith('ar');
+            const currentLang = isArabic ? 'ar' : 'en';
+            const content = translations[currentLang];
+
+            // تطبيق الإعدادات
+            document.documentElement.lang = currentLang;
+            document.documentElement.dir = isArabic ? 'rtl' : 'ltr';
+
+            // تحديث النصوص
+            document.title = content.pageTitle;
+            document.getElementById('main-title').textContent = content.title;
+            document.getElementById('description').textContent = content.desc;
+            document.getElementById('retry-btn').textContent = content.btn;
+            document.getElementById('footer-text').textContent = content.footer;
+        })();
+    <\/script>
+</body>
+</html>`,{headers:{"Content-Type":"text/html; charset=utf-8"},status:503,statusText:"Service Unavailable"})}})())});

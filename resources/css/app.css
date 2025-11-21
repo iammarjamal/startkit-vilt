@@ -4,6 +4,7 @@
 */
 
 @import 'tailwindcss';
+@import '@nuxt/ui';
 @import 'tw-animate-css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -326,36 +327,36 @@
 @theme inline {
     --animate-accordion-down: accordion-down 0.2s ease-out;
     --animate-accordion-up: accordion-up 0.2s ease-out;
-  @keyframes accordion-down {
-  from {
-    height: 0;
+    @keyframes accordion-down {
+        from {
+            height: 0;
         }
-  to {
-    height: var(--reka-accordion-content-height);
-        }
-    }
-  @keyframes accordion-up {
-  from {
-    height: var(--reka-accordion-content-height);
-        }
-  to {
-    height: 0;
+        to {
+            height: var(--reka-accordion-content-height);
         }
     }
-  @keyframes accordion-down {
-  from {
-    height: 0;
+    @keyframes accordion-up {
+        from {
+            height: var(--reka-accordion-content-height);
         }
-  to {
-    height: var(--reka-accordion-content-height);
+        to {
+            height: 0;
         }
     }
-  @keyframes accordion-up {
-  from {
-    height: var(--reka-accordion-content-height);
+    @keyframes accordion-down {
+        from {
+            height: 0;
         }
-  to {
-    height: 0;
+        to {
+            height: var(--reka-accordion-content-height);
+        }
+    }
+    @keyframes accordion-up {
+        from {
+            height: var(--reka-accordion-content-height);
+        }
+        to {
+            height: 0;
         }
     }
 }
@@ -365,10 +366,186 @@
 */
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+    * {
+        @apply border-border outline-ring/50;
     }
-  body {
-    @apply bg-background text-foreground;
+    body {
+        @apply bg-background text-foreground;
     }
+}
+
+/* =========================================
+   0. Global Direction Logic (The Brain 🧠)
+   ========================================= */
+
+/* الوضع الافتراضي (LTR) */
+html {
+    --dir: 1;
+    --shadow-x: -20px; /* الظل يكون على يسار الصفحة القادمة */
+}
+
+/* وضع الـ RTL: نعكس الاتجاه والظل */
+html[dir='rtl'] {
+    --dir: -1;
+    --shadow-x: 20px; /* الظل يكون على يمين الصفحة القادمة */
+}
+
+المشكلة التي تواجهها هي أن الصفحة التي تعود إليها (الصفحة السابقة) تعاملها الـ CSS كأنها صفحة جديدة تماماً، فتطبق عليها أنيميشن "الدخول" (Slide In) بدلاً من أنيميشن "الاستعادة" (Restore/Parallax).
+
+لحل هذه المشكلة وجعل الحركة تبدو طبيعية تماماً (Native)، يجب أن نطبق مبدأ "اللا تماثل" (Asymmetry):
+
+عند الذهاب (Forward): الصفحة الجديدة تدخل من اليمين، والقديمة تذهب لليسار قليلاً.
+
+عند العودة (Back): الصفحة الحالية تخرج لليمين، والصفحة السابقة تعود من اليسار (وليس تدخل من اليمين).
+
+إليك التعديل الجذري لملف CSS ليحترم هذا المنطق (مع دعم RTL/LTR تلقائياً كما اتفقنا):
+
+الحل في ملف transitions.css
+استبدل كود iOS السابق بهذا الكود الدقيق. لاحظ كيف نعالج view-transition-new بشكل مختلف تماماً في حالة back.
+
+CSS
+
+/* =========================================
+   iOS Native Logic (Asymmetric)
+   ========================================= */
+
+/* السيناريو 1: التقدم للأمام (Forward)
+  - الصفحة القديمة (Old): تظلم وتذهب قليلاً عكس الاتجاه (Parallax).
+  - الصفحة الجديدة (New): تأتي من اتجاه الحركة وتغطي القديمة.
+*/
+
+html[data-os="ios"][data-direction="forward"]::view-transition-old(root) {
+    animation: ios-parallax-out 0.5s cubic-bezier(0.32, 0.72, 0, 1) both;
+    filter: brightness(0.7); /* تعتيم لتبدو في الخلفية */
+}
+
+html[data-os='ios'][data-direction='forward']::view-transition-new(root) {
+    animation: ios-slide-in 0.5s cubic-bezier(0.32, 0.72, 0, 1) both;
+    box-shadow: var(--shadow-x) 0 25px rgba(0, 0, 0, 0.2); /* الظل مهم جداً للعمق */
+    z-index: 100; /* الجديدة فوق القديمة */
+}
+
+/* السيناريو 2: العودة للخلف (Back) - هنا الحل لمشكلتك 🟢
+  - الصفحة الحالية التي تغادر (Old): تنزلق للخارج (باتجاه الحركة).
+  - الصفحة التي نعود إليها (New): كانت في الخلفية، إذن يجب أن تعود من الـ Parallax (وليس تدخل من جديد).
+*/
+
+html[data-os='ios'][data-direction='back']::view-transition-old(root) {
+    animation: ios-slide-out 0.5s cubic-bezier(0.32, 0.72, 0, 1) both;
+    z-index: 100; /* التي تغادر هي التي كانت فوق */
+    box-shadow: var(--shadow-x) 0 25px rgba(0, 0, 0, 0.2);
+}
+
+html[data-os='ios'][data-direction='back']::view-transition-new(root) {
+    /* 🔥 هذا هو السر: لا تعيد أنيميشن الدخول، بل استعد وضعك الطبيعي */
+    animation: ios-parallax-in 0.5s cubic-bezier(0.32, 0.72, 0, 1) both;
+    filter: brightness(0.7); /* تبدأ معتمة ثم تضيء */
+}
+
+/* =========================================
+   Keyframes (تعتمد على المتغير --dir من الرد السابق)
+   ========================================= */
+
+/* حركة الدخول الكاملة (للصفحة الجديدة في Forward) */
+@keyframes ios-slide-in {
+    from {
+        transform: translateX(calc(100% * var(--dir)));
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+/* حركة الخروج الكاملة (للصفحة المغادرة في Back) */
+@keyframes ios-slide-out {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(calc(100% * var(--dir)));
+    }
+}
+
+/* حركة الباراليكس للخروج (للصفحة الخلفية في Forward) */
+/* تذهب 30% فقط عكس الاتجاه */
+@keyframes ios-parallax-out {
+    from {
+        transform: translateX(0);
+        filter: brightness(1);
+    }
+    to {
+        transform: translateX(calc(-30% * var(--dir)));
+        filter: brightness(0.7);
+    }
+}
+
+/* حركة الباراليكس للدخول (للصفحة الخلفية في Back) */
+/* تعود من -30% إلى 0 */
+@keyframes ios-parallax-in {
+    from {
+        transform: translateX(calc(-30% * var(--dir)));
+        filter: brightness(0.7);
+    }
+    to {
+        transform: translateX(0);
+        filter: brightness(1);
+    }
+}
+
+/* =========================================
+   2. Android Style (Fade + Scale)
+   ========================================= */
+/* لا تغيير كبير هنا لأن الحركة رأسية (Zoom/Fade) ولا تتأثر كثيراً بالاتجاه،
+   لكنها ستعمل بسلام مع الكود أعلاه. */
+
+html[data-os='android']::view-transition-old(root) {
+    animation: fade-out 0.3s ease-in both;
+}
+html[data-os='android']::view-transition-new(root) {
+    animation: android-zoom-in 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+    transform-origin: center top;
+}
+
+html[data-os='android'][data-direction='back']::view-transition-old(root) {
+    animation: android-zoom-out 0.25s ease-out both;
+    z-index: 100;
+}
+html[data-os='android'][data-direction='back']::view-transition-new(root) {
+    animation: fade-in 0.25s ease-in both;
+}
+
+@keyframes android-zoom-in {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(20px);
+    }
+}
+@keyframes android-zoom-out {
+    to {
+        opacity: 0;
+        transform: scale(0.95) translateY(20px);
+    }
+}
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+}
+@keyframes fade-out {
+    to {
+        opacity: 0;
+    }
+}
+
+/* =========================================
+   3. Desktop/Default
+   ========================================= */
+html[data-os='desktop']::view-transition-group(root) {
+    animation-duration: 0.2s;
+}
+html[data-os='desktop']::view-transition-old(root) {
+    animation: fade-out 0.15s ease both;
+}
+html[data-os='desktop']::view-transition-new(root) {
+    animation: fade-in 0.15s ease both;
 }
