@@ -104,7 +104,7 @@ const buttonVariants = (index) => ({
                         type: 'spring',
                         stiffness: 200
                     }"
-                        class="mx-auto bg-black dark:bg-white p-2 w-16 h-16 rounded-2xl flex items-center justify-center mb-2">
+                        class="mx-auto bg-black dark:bg-white border-none p-2 w-16 h-16 rounded-2xl flex items-center justify-center mb-2">
                         <AppLogo type="icon" />
                     </motion.div>
 

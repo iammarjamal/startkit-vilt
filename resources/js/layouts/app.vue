@@ -1,6 +1,7 @@
 <script setup>
 import { Head } from '@inertiajs/vue3';
 import Splash from '@/components/app/Splash/index.vue';
+import Offline from '@/components/app/Offline/index.vue';
 
 const props = defineProps({
     title: {
@@ -37,6 +38,7 @@ const isDesktop = useMediaQuery('(min-width: 768px)');
     <Splash />
 
     <main>
+        <Offline />
         <div class="desktop flex h-full flex-col" v-if="isDesktop">
             <slot></slot>
         </div>

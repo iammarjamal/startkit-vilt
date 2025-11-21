@@ -4,12 +4,10 @@
 <head>
     <!-- Base Meta -->
     @if(!empty($page))
-        @inertiaHead
+    @inertiaHead
     @endif
 
-    <meta property="og:image" content="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
     <meta property="og:type" content="website" />
-    <meta property="twitter:image" content="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta property="og:url" content="{{ url()->current() }}" />
     <meta property="twitter:url" content="{{ url()->current() }}" />
@@ -18,27 +16,25 @@
     <meta name="viewport"
         content="initial-scale=1, maximum-scale=5, minimum-scale=1, width=device-width" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <!-- Meta -->
+    <!-- Base Meta -->
 
     <!-- Favicon -->
-    <link rel="apple-touch-icon" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
-    <link rel="apple-touch-icon" sizes="57x57" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
-    <link rel="apple-touch-icon" sizes="60x60" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
-    <link rel="apple-touch-icon" sizes="72x72" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
-    <link rel="apple-touch-icon" sizes="76x76" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
-    <link rel="apple-touch-icon" sizes="114x114" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
-    <link rel="apple-touch-icon" sizes="120x120" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
-    <link rel="apple-touch-icon" sizes="144x144" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
-    <link rel="apple-touch-icon" sizes="152x152" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
-
-    <link rel="icon" type="image/png" sizes="192x192" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
-    <link rel="icon" type="image/png" sizes="96x96" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
-
-    <link rel="shortcut icon" href="{{ request()->getSchemeAndHttpHost() }}/assets/images/icons/icon.webp" />
+    <meta property="og:image" content="{{ asset('build/apple-touch-icon-180x180.png') }}" />
+    <meta property="twitter:image" content="{{ asset('build/apple-touch-icon-180x180.png') }}" />
+    <link rel="icon" href="{{ asset('build/favicon.ico') }}" sizes="any">
+    <link rel="icon" href="{{ asset('build/favicon-32x32.png') }}" type="image/png">
+    <link rel="apple-touch-icon" href="{{ asset('build/apple-touch-icon.png') }}">
     <!-- Favicon -->
+
+    <!-- PWA Meta -->
+    <link rel="manifest" href="{{ asset('build/manifest.webmanifest') }}">
+    <meta name="theme-color" content="#000000">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="{{ env('APP_NAME') }}">
+    <!-- PWA Meta -->
 
     <!-- Assets -->
 
@@ -69,19 +65,18 @@
     </style>
     @routes
     @vite(['resources/css/app.css', 'resources/js/app.ts'])
-    @laravelPWA
     <!-- Assets -->
 </head>
 
 <body class="bg-light dark:bg-dark">
     @if(!empty($page))
-        @inertia
+    @inertia
     @endif
     <!-- OR -->
     @yield('slot')
 
     <NoScript>
-        <div class="fixed top-16 ltr:left-0 rtl:right-0 z-[1000] w-full h-full">
+        <div class="fixed top-16 ltr:left-0 rtl:right-0 z-1000 w-full h-full">
             <p class="text-sm text-center ltr:hidden">يرجى تشغيل محرك الجافاسكربت ليعمل الموقع بنجاح.</p>
             <p class="text-sm text-center rtl:hidden">Please enable the JavaScript to run successfully.</p>
         </div>

@@ -14,9 +14,9 @@ import {
 } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import {
-    InputOTP,
-    InputOTPGroup,
-    InputOTPSlot,
+    PinInput,
+    PinInputGroup,
+    PinInputSlot,
 } from '@/components/ui/pin-input'
 import AuthLayout from '@/layouts/auth.vue'
 
@@ -203,12 +203,12 @@ const buttonVariants = {
                         <!-- OTP Input -->
                         <motion.div :initial="otpVariants.initial" :animate="otpVariants.animate" dir="ltr"
                             class="flex justify-center">
-                            <InputOTP :maxLength="6" name="otp" v-model="form.otp" class="gap-2">
-                                <InputOTPGroup class="gap-2">
-                                    <InputOTPSlot v-for="index in 6" :key="index" :index="index - 1"
+                            <PinInput :maxLength="6" name="otp" v-model="form.otp" class="gap-2">
+                                <PinInputGroup class="gap-2">
+                                    <PinInputSlot v-for="index in 6" :key="index" :index="index - 1"
                                         class="w-12 h-12 text-lg font-bold border-2 focus:border-primary/50 focus:ring-primary/20 transition-all duration-300 rounded-lg" />
-                                </InputOTPGroup>
-                            </InputOTP>
+                                </PinInputGroup>
+                            </PinInput>
                         </motion.div>
 
                         <!-- Timer -->

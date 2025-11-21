@@ -12,6 +12,14 @@ Props:
 import { Link } from '@inertiajs/vue3';
 import { computed, onMounted, ref } from 'vue';
 
+// Import all logo and icon images from resources/assets
+import iconDark from '~/assets/images/icons/icon-dark.webp';
+import iconLight from '~/assets/images/icons/icon-light.webp';
+import logoArDark from '~/assets/images/logos/logo-ar-dark.webp';
+import logoArLight from '~/assets/images/logos/logo-ar-light.webp';
+import logoEnDark from '~/assets/images/logos/logo-en-dark.webp';
+import logoEnLight from '~/assets/images/logos/logo-en-light.webp';
+
 const props = defineProps({
     class: { type: String, default: '' },
     type: { type: String, default: 'logo' },
@@ -77,27 +85,26 @@ const imagePath = computed(() => {
     const themeToUse = forcedTheme ? props.theme : isDark.value ? 'light' : 'dark';
 
     if (props.type === 'icon') {
-        return themeToUse === 'dark' ? '/assets/images/icons/icon.webp' : '/assets/images/icons/icon.webp';
+        return themeToUse === 'dark' ? iconLight : iconDark;
     }
-    return `/assets/images/logos/logo-${language.value === 'ar' ? 'ar' : 'en'}-${themeToUse}.webp`;
+
+    // Return imported logo based on language and theme
+    if (language.value === 'ar') {
+        return themeToUse === 'dark' ? logoArDark : logoArLight;
+    } else {
+        return themeToUse === 'dark' ? logoEnDark : logoEnLight;
+    }
 });
 </script>
 
 <template>
     <Link :href="route('auth.index')">
-        <div class="max-w-24">
-            <Transition
-                enter-active-class="transition-opacity duration-500 ease-in"
-                enter-from-class="absolute opacity-0"
-                enter-to-class="opacity-100"
-            >
-                <img
-                    :key="imagePath"
-                    :src="imagePath"
-                    :alt="`Logo ${language} ${isDark ? 'Light' : 'Dark'}`"
-                    :class="[props.class, 'object-contain']"
-                />
-            </Transition>
-        </div>
+    <div class="max-w-24">
+        <Transition enter-active-class="transition-opacity duration-500 ease-in" enter-from-class="absolute opacity-0"
+            enter-to-class="opacity-100">
+            <img :key="imagePath" :src="imagePath" :alt="`Logo ${language} ${isDark ? 'Light' : 'Dark'}`"
+                :class="[props.class, 'object-contain']" />
+        </Transition>
+    </div>
     </Link>
 </template>
