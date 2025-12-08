@@ -1,0 +1,48 @@
+{
+    "servers": {
+        "Inertia.js Documentation": {
+            "url": "https://inertiajs.com/docs/mcp",
+            "type": "http"
+        },
+
+        "shadcn": {
+            "command": "npx",
+            "args": ["shadcn-vue@latest", "mcp"]
+        },
+
+        "motion": {
+            "command": "npx -y motion-ai"
+        },
+
+        "nuxt-ui": {
+            "type": "http",
+            "url": "https://ui.nuxt.com/mcp"
+        },
+
+        "mdn-docs": {
+            "command": "npx",
+            "args": ["-y", "@modelcontextprotocol/server-brave-search"]
+        },
+
+        "tailwind-tools": {
+            "command": "npx",
+            "args": ["-y", "tailwindcss-mcp-server"]
+        },
+
+        // "git-history": {
+        //     "command": "npx",
+        //     "args": ["-y", "@modelcontextprotocol/server-git", "/Absolute/Path/To/Your/Laravel/Project"]
+        // }
+
+        // "laravel-files": {
+        //     "command": "npx",
+        //     "args": ["-y", "@modelcontextprotocol/server-filesystem", "/Users/username/Sites/my-laravel-project"]
+        // },
+
+        // "laravel-db": {
+        //     "command": "npx",
+        //     "args": ["-y", "@modelcontextprotocol/server-mysql", "root:password@localhost:3306/laravel_database"]
+        // },
+    },
+    "inputs": []
+}
