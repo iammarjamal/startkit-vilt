@@ -15,7 +15,7 @@ Route::prefix(LaravelLocalization::setLocale())->middleware(['localeSessionRedir
 
         // Home Route
         Route::get('/', function () {
-            return redirect()->route('auth.index');
+            return Inertia::render('welcome');
         })->name('home.index');
 
         // Auth Routes
