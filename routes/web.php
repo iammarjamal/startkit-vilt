@@ -4,9 +4,10 @@ use App\Http\Controllers\Auth\EmailAuthController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\MicrosoftAuthController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Settings\PasswordController;
+use App\Http\Controllers\Settings\ProfileController;
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -46,6 +47,21 @@ Route::prefix(LaravelLocalization::setLocale())->middleware(['localeSessionRedir
                 return Inertia::render('dashboard/index');
             })->name('dashboard');
         });
+
+Route::middleware('auth')->group(function () {
+    Route::redirect('settings', '/settings/profile');
+
+    Route::get('settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('settings/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('settings/password', [PasswordController::class, 'edit'])->name('password.edit');
+    Route::put('settings/password', [PasswordController::class, 'update'])->name('password.update');
+
+    Route::get('settings/appearance', function () {
+        return Inertia::render('settings/Appearance');
+    })->name('appearance');
+});
     }
 );
 

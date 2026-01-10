@@ -61,7 +61,6 @@ export default defineConfig(({ mode }) => {
                     scope: '/',
                     start_url: '/',
                     background_color: '#000000',
-                    status_bar: 'black-translucent',
                     orientation: 'portrait-primary',
                     icons: [
                         { src: 'pwa-64x64.png', sizes: '64x64', type: 'image/png' },

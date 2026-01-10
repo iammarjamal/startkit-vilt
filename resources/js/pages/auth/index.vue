@@ -1,4 +1,3 @@
-خلي الانيميشن فيه حياة ليش الانيميشن في رياكت اجمل من فيو :
 <script setup>
 import { computed } from 'vue'
 import { router } from '@inertiajs/vue3'
