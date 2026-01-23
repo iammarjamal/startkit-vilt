@@ -24,7 +24,6 @@ const isDesktop = useMediaQuery('(min-width: 768px)');
 </script>
 
 <template>
-
     <Head>
         <title inertia>{{ t('name') }} - {{ title }}</title>
         <meta name="description" :content="desc" />
@@ -48,7 +47,8 @@ const isDesktop = useMediaQuery('(min-width: 768px)');
     </main>
 </template>
 
-<i18n lang="json">{
+<i18n lang="json">
+{
     "ar": {
         "name": "رقيم",
         "error_occurred": "حدث خطأ أثناء المعالجة"
@@ -57,7 +57,8 @@ const isDesktop = useMediaQuery('(min-width: 768px)');
         "name": "Rqeim",
         "error_occurred": "An error occurred"
     }
-}</i18n>
+}
+</i18n>
 
 <style scoped>
 .phone * {

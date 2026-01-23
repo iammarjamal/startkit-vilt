@@ -1,10 +1,11 @@
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
+import { wayfinder } from '@laravel/vite-plugin-wayfinder';
 import tailwindcss from '@tailwindcss/vite';
 import vue from '@vitejs/plugin-vue';
 import laravel from 'laravel-vite-plugin';
-import { dirname, resolve } from 'node:path';
+import path from 'node:path';
+import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import path from 'path';
 import AutoImport from 'unplugin-auto-import/vite';
 import { defineConfig, loadEnv } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
@@ -14,7 +15,7 @@ export default defineConfig(({ mode }) => {
     return {
         plugins: [
             laravel({
-                input: ['resources/css/app.css', 'resources/js/app.ts'],
+                input: ['resources/js/app.ts'],
                 ssr: 'resources/js/ssr.ts',
                 refresh: true,
             }),
@@ -27,6 +28,7 @@ export default defineConfig(({ mode }) => {
                     },
                 },
             }),
+            wayfinder(),
             AutoImport({
                 imports: [
                     'vue',
@@ -38,7 +40,7 @@ export default defineConfig(({ mode }) => {
                 dts: 'resources/js/types/auto-imports.d.ts',
             }),
             VueI18nPlugin({
-                include: resolve(dirname(fileURLToPath(import.meta.url)), './locales/**'),
+                include: path.resolve(dirname(fileURLToPath(import.meta.url)), './locales/**'),
             }),
             VitePWA({
                 strategies: 'injectManifest',
@@ -51,7 +53,6 @@ export default defineConfig(({ mode }) => {
                     image: 'public/icon.png',
                     preset: 'minimal-2023',
                 },
-
                 manifest: {
                     name: env.APP_NAME || 'PWA App',
                     short_name: env.APP_NAME || 'PWA App',
@@ -65,13 +66,14 @@ export default defineConfig(({ mode }) => {
                     icons: [
                         { src: 'pwa-64x64.png', sizes: '64x64', type: 'image/png' },
                         { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
-                        { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+                        { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
                         { src: 'maskable-icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+                        { src: 'apple-touch-icon-180x180.png', sizes: '180x180', type: 'image/png' },
                     ],
                 },
                 injectManifest: {
                     globDirectory: 'public',
-                    globPatterns: [],
+                    globPatterns: ['**/*.{js,css,html,ico,png,svg}', 'offline.html'],
                     injectionPoint: undefined,
                 },
             }),
@@ -79,7 +81,9 @@ export default defineConfig(({ mode }) => {
         resolve: {
             alias: {
                 '@': path.resolve(__dirname, './resources/js'),
-                '~': path.resolve(__dirname, './resources'),
+                '@css': path.resolve(__dirname, './resources/css'),
+                '@assets': path.resolve(__dirname, './resources/assets'),
+                '@resources': path.resolve(__dirname, './resources'),
                 '#': path.resolve(__dirname),
             },
         },

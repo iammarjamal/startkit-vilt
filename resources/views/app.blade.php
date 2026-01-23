@@ -23,7 +23,7 @@
     <meta property="twitter:image" content="{{ asset('build/apple-touch-icon-180x180.png') }}" />
     <link rel="icon" href="{{ asset('build/favicon.ico') }}" sizes="any">
     <link rel="icon" href="{{ asset('build/favicon-32x32.png') }}" type="image/png">
-    <link rel="apple-touch-icon" href="{{ asset('build/apple-touch-icon.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('build/apple-touch-icon-180x180.png') }}">
     <!-- Favicon -->
 
     <!-- PWA Meta -->
@@ -63,12 +63,11 @@
             background-color: oklch(0.145 0 0);
         }
     </style>
-    @routes
-    @vite(['resources/css/app.css', 'resources/js/app.ts'])
+    @vite(['resources/js/app.ts', "resources/js/pages/{$page['component']}.vue"])
     <!-- Assets -->
 </head>
 
-<body class="bg-light dark:bg-dark">
+<body class="font-sans antialiased bg-light dark:bg-dark">
     @if(!empty($page))
     @inertia
     @endif

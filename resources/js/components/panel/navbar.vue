@@ -74,15 +74,15 @@ const navigationGroups = computed(() => {
 
         case 'dashboard':
             return [
-            {
-                            iconOutline: 'solar:home-angle-outline',
-                            iconSolid: 'solar:home-smile-bold',
-                            label: 'sidebar.dashboard',
-                            url: 'dashboard.index',
-                            isActive: route().current('dashboard.index'),
-                            can: can('index.view').value,
-                            badge: null,
-                        },
+                {
+                    iconOutline: 'solar:home-angle-outline',
+                    iconSolid: 'solar:home-smile-bold',
+                    label: 'sidebar.dashboard',
+                    url: 'dashboard.index',
+                    isActive: route().current('dashboard.index'),
+                    can: can('index.view').value,
+                    badge: null,
+                },
             ];
 
         case 'manger':
@@ -172,7 +172,7 @@ const middleIndex = computed(() => Math.floor(items.value.length / 2));
     <footer class="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background shadow-md dark:border-border dark:bg-background">
         <!-- Loading Skeleton -->
         <div v-if="!navigationGroups && navigationGroups.length" class="flex h-16 items-center justify-around px-4">
-            <div v-for="i in (type === 'member' ? 5 : 4)" :key="i" class="flex flex-col items-center justify-center">
+            <div v-for="i in type === 'member' ? 5 : 4" :key="i" class="flex flex-col items-center justify-center">
                 <Skeleton class="h-8 w-8 rounded-full" />
             </div>
         </div>
@@ -201,7 +201,7 @@ const middleIndex = computed(() => Math.floor(items.value.length / 2));
                                 : 'absolute -top-6 left-1/2 z-10 h-14 w-14 -translate-x-1/2 items-center justify-center rounded-full border-4 border-white bg-primary text-primary-foreground shadow-lg hover:scale-105 dark:border-border dark:text-foreground',
                         ]"
                     >
-                        <Icon :name="item.isActive ? item.iconSolid : item.iconOutline" :class="[isOdd ? 'w-6 h-6' : 'w-8 h-8']" />
+                        <Icon :name="item.isActive ? item.iconSolid : item.iconOutline" :class="[isOdd ? 'h-6 w-6' : 'h-8 w-8']" />
                     </button>
                 </template>
 
@@ -212,13 +212,10 @@ const middleIndex = computed(() => Math.floor(items.value.length / 2));
                     :class="[
                         'flex flex-col items-center justify-center transition hover:text-primary',
                         item.isActive ? 'text-primary' : 'text-muted-foreground',
-                        type === 'member' ? 'text-3xl' : 'w-8 h-8'
+                        type === 'member' ? 'text-3xl' : 'h-8 w-8',
                     ]"
                 >
-                    <Icon
-                        :name="item.isActive ? item.iconSolid : item.iconOutline"
-                        :class="type === 'member' ? 'text-3xl' : 'w-8 h-8'"
-                    />
+                    <Icon :name="item.isActive ? item.iconSolid : item.iconOutline" :class="type === 'member' ? 'text-3xl' : 'h-8 w-8'" />
                 </button>
             </template>
 
@@ -232,10 +229,7 @@ const middleIndex = computed(() => Math.floor(items.value.length / 2));
             >
                 <Icon
                     :name="isSidebarOpen ? 'iconamoon:close-light' : 'charm:menu-hamburger'"
-                    :class="[
-                        'transition-all ltr:scale-x-[-1]',
-                        type === 'member' ? 'text-3xl' : 'w-8 h-8'
-                    ]"
+                    :class="['transition-all ltr:scale-x-[-1]', type === 'member' ? 'text-3xl' : 'h-8 w-8']"
                 />
             </button>
         </nav>

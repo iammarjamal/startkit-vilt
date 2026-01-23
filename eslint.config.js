@@ -1,29 +1,47 @@
+import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript';
 import prettier from 'eslint-config-prettier';
+import importPlugin from 'eslint-plugin-import';
 import vue from 'eslint-plugin-vue';
 
-export default [
+export default defineConfigWithVueTs(
+    vue.configs['flat/essential'],
+    vueTsConfigs.recommended,
     {
-        ignores: ['vendor', 'node_modules', 'public', 'bootstrap/ssr', 'tailwind.config.js'],
-        plugins: { vue },
-        languageOptions: {
-            parser: 'vue-eslint-parser',
-            parserOptions: {
-                ecmaVersion: 2022,
-                sourceType: 'module',
+        ignores: ['vendor', 'node_modules', 'public', 'bootstrap/ssr', 'tailwind.config.js', 'vite.config.ts', 'resources/js/components/ui/*'],
+    },
+    {
+        plugins: {
+            import: importPlugin,
+        },
+        settings: {
+            'import/resolver': {
+                typescript: {
+                    alwaysTryTypes: true,
+                    project: './tsconfig.json',
+                },
             },
         },
         rules: {
-            ...vue.configs['flat/essential'].rules,
             'vue/multi-word-component-names': 'off',
-            'vue/component-api-style': ['error', ['script-setup']],
-            'vue/component-tags-order': [
+            '@typescript-eslint/no-explicit-any': 'off',
+            '@typescript-eslint/consistent-type-imports': [
                 'error',
                 {
-                    order: ['script', 'template', 'style', 'i18n'],
+                    prefer: 'type-imports',
+                    fixStyle: 'separate-type-imports',
                 },
             ],
-            '@typescript-eslint/no-explicit-any': 'warn',
+            'import/order': [
+                'error',
+                {
+                    groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+                    alphabetize: {
+                        order: 'asc',
+                        caseInsensitive: true,
+                    },
+                },
+            ],
         },
     },
     prettier,
-];
+);

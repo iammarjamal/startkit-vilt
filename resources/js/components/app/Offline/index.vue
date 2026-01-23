@@ -18,10 +18,13 @@ const online = useOnline();
 
 <template>
     <div v-if="!online">
-        <div :class="[
-            props.class,
-            'relative left-0 right-0 top-0 !z-50 !my-0 flex w-full flex-col justify-center !overflow-x-hidden !rounded-none !border-0 !text-center bg-[var(--destructive)] text-[var(--destructive-foreground)]',
-        ]" type="error">
+        <div
+            :class="[
+                props.class,
+                'relative top-0 right-0 left-0 !z-50 !my-0 flex w-full flex-col justify-center !overflow-x-hidden !rounded-none !border-0 bg-[var(--destructive)] !text-center text-[var(--destructive-foreground)]',
+            ]"
+            type="error"
+        >
             {{ t('body.offline') }}
         </div>
     </div>

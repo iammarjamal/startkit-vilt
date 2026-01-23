@@ -214,7 +214,13 @@ const navigationGroups = computed(() => {
         </div>
 
         <!-- Navigation Groups -->
-        <div v-else v-for="group in navigationGroups" :key="group.title" v-show="group.can" class="relative flex w-full flex-col items-center justify-center">
+        <div
+            v-else
+            v-for="group in navigationGroups"
+            :key="group.title"
+            v-show="group.can"
+            class="relative flex w-full flex-col items-center justify-center"
+        >
             <div v-if="isSidebarOpen && group.can" class="mt-0 flex w-full items-center p-2 text-start text-xs font-medium text-muted-foreground">
                 {{ t(group.title) }}
             </div>

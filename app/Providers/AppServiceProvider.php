@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
-use Laravel\Socialite\Facades\Socialite;
-use SocialiteProviders\Manager\SocialiteWasCalled;
+use Illuminate\Validation\Rules\Password;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,14 +23,25 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->app['events']->listen(
-            SocialiteWasCalled::class,
-            '\SocialiteProviders\Google\GoogleExtendSocialite@handle'
+        $this->configureDefaults();
+    }
+
+    protected function configureDefaults(): void
+    {
+        Date::use(CarbonImmutable::class);
+
+        DB::prohibitDestructiveCommands(
+            app()->isProduction(),
         );
 
-        $this->app['events']->listen(
-            SocialiteWasCalled::class,
-            '\SocialiteProviders\Microsoft\MicrosoftExtendSocialite@handle'
+        Password::defaults(fn (): ?Password => app()->isProduction()
+            ? Password::min(12)
+                ->mixedCase()
+                ->letters()
+                ->numbers()
+                ->symbols()
+                ->uncompromised()
+            : null
         );
     }
 }

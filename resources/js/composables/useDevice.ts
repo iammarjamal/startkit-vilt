@@ -5,7 +5,7 @@ export function useDevice() {
     const isMobile = useMediaQuery('(max-width: 767px)');
     const isTablet = useMediaQuery('(min-width: 768px) and (max-width: 1023px)');
     const isDesktop = useMediaQuery('(min-width: 1024px)');
-    
+
     const deviceType = computed(() => {
         if (isMobile.value) return 'mobile';
         if (isTablet.value) return 'tablet';
@@ -14,7 +14,7 @@ export function useDevice() {
 
     // Operating System Detection
     const userAgent = navigator.userAgent;
-    
+
     const isIOS = computed(() => /iPad|iPhone|iPod/.test(userAgent));
     const isAndroid = computed(() => /Android/.test(userAgent));
     const isWindows = computed(() => /Windows/.test(userAgent));
@@ -40,6 +40,6 @@ export function useDevice() {
         isSafari,
         isChrome,
         isFirefox,
-        isEdge
+        isEdge,
     };
 }

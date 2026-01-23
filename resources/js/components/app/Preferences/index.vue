@@ -36,14 +36,14 @@ const isDesktop = useMediaQuery('(min-width: 768px)');
             </DialogHeader>
 
             <div class="flex flex-col gap-y-3">
-                <div class="py-2 pb-5 border-b border-[var(--border)] dark:border-[var(--border)]">
+                <div class="border-b border-[var(--border)] py-2 pb-5 dark:border-[var(--border)]">
                     <Language inline />
                 </div>
                 <div class="py-2">
                     <Theme inline />
                 </div>
             </div>
-            </DialogContent>
+        </DialogContent>
     </Dialog>
 
     <Drawer v-else :open="isOpen">
@@ -52,22 +52,22 @@ const isDesktop = useMediaQuery('(min-width: 768px)');
         </DrawerTrigger>
 
         <DrawerContent>
-            <DrawerHeader class="text-start mt-3">
+            <DrawerHeader class="mt-3 text-start">
                 <DrawerTitle>{{ t('body.title') }}</DrawerTitle>
                 <DrawerDescription>
                     {{ t('body.desc') }}
                 </DrawerDescription>
             </DrawerHeader>
 
-            <div class="flex flex-col gap-y-3 px-4 pb-4 mb-7">
-                <div class="py-2 pb-5 border-b border-[var(--border)] dark:border-[var(--border)]">
+            <div class="mb-7 flex flex-col gap-y-3 px-4 pb-4">
+                <div class="border-b border-[var(--border)] py-2 pb-5 dark:border-[var(--border)]">
                     <Language inline />
                 </div>
                 <div class="py-2">
                     <Theme inline />
                 </div>
             </div>
-            </DrawerContent>
+        </DrawerContent>
     </Drawer>
 </template>
 

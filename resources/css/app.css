@@ -4,7 +4,7 @@
 */
 
 @import 'tailwindcss';
-@import '@nuxt/ui';
+
 @import 'tw-animate-css';
 
 /* Source Paths */
@@ -33,7 +33,8 @@
     --radius-3xl: 1.5rem;
 
     /* Typography */
-    --font-sans: 'IBM Plex Sans Arabic', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-sans:
+        'IBM Plex Sans Arabic', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
     --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
 
@@ -86,12 +87,20 @@
     --animate-accordion-up: accordion-up 0.2s ease-out;
 
     @keyframes accordion-down {
-        from { height: 0; }
-        to { height: var(--reka-accordion-content-height); }
+        from {
+            height: 0;
+        }
+        to {
+            height: var(--reka-accordion-content-height);
+        }
     }
     @keyframes accordion-up {
-        from { height: var(--reka-accordion-content-height); }
-        to { height: 0; }
+        from {
+            height: var(--reka-accordion-content-height);
+        }
+        to {
+            height: 0;
+        }
     }
 }
 
@@ -186,28 +195,55 @@
 }
 
 /* Utilities */
-.text-destructive { color: var(--destructive); }
-.bg-destructive { background-color: var(--destructive); }
-.border-destructive { border-color: var(--destructive); }
+.text-destructive {
+    color: var(--destructive);
+}
+.bg-destructive {
+    background-color: var(--destructive);
+}
+.border-destructive {
+    border-color: var(--destructive);
+}
 
-.text-success { color: var(--success); }
-.bg-success { background-color: var(--success); }
-.border-success { border-color: var(--success); }
+.text-success {
+    color: var(--success);
+}
+.bg-success {
+    background-color: var(--success);
+}
+.border-success {
+    border-color: var(--success);
+}
 
-.text-warning { color: var(--warning); }
-.bg-warning { background-color: var(--warning); }
-.border-warning { border-color: var(--warning); }
+.text-warning {
+    color: var(--warning);
+}
+.bg-warning {
+    background-color: var(--warning);
+}
+.border-warning {
+    border-color: var(--warning);
+}
 
-.text-info { color: var(--info); }
-.bg-info { background-color: var(--info); }
-.border-info { border-color: var(--info); }
+.text-info {
+    color: var(--info);
+}
+.bg-info {
+    background-color: var(--info);
+}
+.border-info {
+    border-color: var(--info);
+}
 
 .focus-ring {
     @apply focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-none;
 }
 
 .transition-colors {
-    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+    transition:
+        color 0.15s ease-in-out,
+        background-color 0.15s ease-in-out,
+        border-color 0.15s ease-in-out;
 }
 .transition-all {
     transition: all 0.15s ease-in-out;
@@ -215,15 +251,29 @@
 
 /* Animations */
 @keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 @keyframes slide-in {
-    from { transform: translateY(-10px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
-.animate-fade-in { animation: fade-in 0.2s ease-out; }
-.animate-slide-in { animation: slide-in 0.3s ease-out; }
+.animate-fade-in {
+    animation: fade-in 0.2s ease-out;
+}
+.animate-slide-in {
+    animation: slide-in 0.3s ease-out;
+}
 
 /*
    =========================================
@@ -245,7 +295,7 @@ html[dir='rtl'] {
 /* 2. iOS Native Logic (Asymmetric) */
 
 /* Forward: Old page dims and moves slightly (Parallax) */
-html[data-os="ios"][data-direction="forward"]::view-transition-old(root) {
+html[data-os='ios'][data-direction='forward']::view-transition-old(root) {
     animation: ios-parallax-out 0.5s cubic-bezier(0.32, 0.72, 0, 1) both;
     filter: brightness(0.7);
 }
@@ -272,23 +322,43 @@ html[data-os='ios'][data-direction='back']::view-transition-new(root) {
 
 /* iOS Keyframes */
 @keyframes ios-slide-in {
-    from { transform: translateX(calc(100% * var(--dir))); }
-    to { transform: translateX(0); }
+    from {
+        transform: translateX(calc(100% * var(--dir)));
+    }
+    to {
+        transform: translateX(0);
+    }
 }
 
 @keyframes ios-slide-out {
-    from { transform: translateX(0); }
-    to { transform: translateX(calc(100% * var(--dir))); }
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(calc(100% * var(--dir)));
+    }
 }
 
 @keyframes ios-parallax-out {
-    from { transform: translateX(0); filter: brightness(1); }
-    to { transform: translateX(calc(-30% * var(--dir))); filter: brightness(0.7); }
+    from {
+        transform: translateX(0);
+        filter: brightness(1);
+    }
+    to {
+        transform: translateX(calc(-30% * var(--dir)));
+        filter: brightness(0.7);
+    }
 }
 
 @keyframes ios-parallax-in {
-    from { transform: translateX(calc(-30% * var(--dir))); filter: brightness(0.7); }
-    to { transform: translateX(0); filter: brightness(1); }
+    from {
+        transform: translateX(calc(-30% * var(--dir)));
+        filter: brightness(0.7);
+    }
+    to {
+        transform: translateX(0);
+        filter: brightness(1);
+    }
 }
 
 /* 3. Android Style (Fade + Scale) */
@@ -309,13 +379,21 @@ html[data-os='android'][data-direction='back']::view-transition-new(root) {
 }
 
 @keyframes android-zoom-in {
-    from { opacity: 0; transform: scale(0.95) translateY(20px); }
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(20px);
+    }
 }
 @keyframes android-zoom-out {
-    to { opacity: 0; transform: scale(0.95) translateY(20px); }
+    to {
+        opacity: 0;
+        transform: scale(0.95) translateY(20px);
+    }
 }
 @keyframes fade-out {
-    to { opacity: 0; }
+    to {
+        opacity: 0;
+    }
 }
 
 /* 4. Desktop/Default Style */

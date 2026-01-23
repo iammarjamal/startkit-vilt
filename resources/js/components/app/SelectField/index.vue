@@ -5,5 +5,5 @@ This is a placeholder SelectField component.
 -->
 <script setup></script>
 <template>
-  <div>SelectField placeholder</div>
+    <div>SelectField placeholder</div>
 </template>

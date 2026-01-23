@@ -1,5 +1,13 @@
 {
     "servers": {
+        "laravel-boost": {
+            "command": "php",
+            "args": [
+                "artisan",
+                "boost:mcp"
+            ]
+        },
+
         "Inertia.js Documentation": {
             "url": "https://inertiajs.com/docs/mcp",
             "type": "http"
@@ -29,20 +37,14 @@
             "args": ["-y", "tailwindcss-mcp-server"]
         },
 
-        // "git-history": {
-        //     "command": "npx",
-        //     "args": ["-y", "@modelcontextprotocol/server-git", "/Absolute/Path/To/Your/Laravel/Project"]
-        // }
-
-        // "laravel-files": {
-        //     "command": "npx",
-        //     "args": ["-y", "@modelcontextprotocol/server-filesystem", "/Users/username/Sites/my-laravel-project"]
-        // },
-
-        // "laravel-db": {
-        //     "command": "npx",
-        //     "args": ["-y", "@modelcontextprotocol/server-mysql", "root:password@localhost:3306/laravel_database"]
-        // },
-    },
-    "inputs": []
+        "herd": {
+            "command": "php",
+            "args": [
+                "/Applications/Herd.app/Contents/Resources/herd-mcp.phar"
+            ],
+            "env": {
+                "SITE_PATH": "/Volumes/iammarjamal/Github/Packages/startkit-vilt/StartKitVue"
+            }
+        }
+    }
 }

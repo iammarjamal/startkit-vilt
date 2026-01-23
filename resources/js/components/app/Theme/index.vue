@@ -169,7 +169,7 @@ const animationProps = computed(() => {
                         {{ t('body.theme') }}
                     </DrawerTitle>
                 </DrawerHeader>
-                <div class="w-full flex flex-col justify-start items-center space-y-3 p-6">
+                <div class="flex w-full flex-col items-center justify-start space-y-3 p-6">
                     <button
                         v-for="(option, index) in options"
                         :key="option.value"

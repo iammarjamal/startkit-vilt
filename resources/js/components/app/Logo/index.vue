@@ -99,12 +99,19 @@ const imagePath = computed(() => {
 
 <template>
     <Link :href="route('auth.index')">
-    <div class="max-w-24">
-        <Transition enter-active-class="transition-opacity duration-500 ease-in" enter-from-class="absolute opacity-0"
-            enter-to-class="opacity-100">
-            <img :key="imagePath" :src="imagePath" :alt="`Logo ${language} ${isDark ? 'Light' : 'Dark'}`"
-                :class="[props.class, 'object-contain']" />
-        </Transition>
-    </div>
+        <div class="max-w-24">
+            <Transition
+                enter-active-class="transition-opacity duration-500 ease-in"
+                enter-from-class="absolute opacity-0"
+                enter-to-class="opacity-100"
+            >
+                <img
+                    :key="imagePath"
+                    :src="imagePath"
+                    :alt="`Logo ${language} ${isDark ? 'Light' : 'Dark'}`"
+                    :class="[props.class, 'object-contain']"
+                />
+            </Transition>
+        </div>
     </Link>
 </template>
