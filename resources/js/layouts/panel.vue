@@ -2,9 +2,9 @@
 import { Icon } from '@iconify/vue';
 
 import Account from '@/components/account/account.vue';
-import Language from '@/components/app/Language/index.vue';
-import Logo from '@/components/app/Logo/index.vue';
-import Theme from '@/components/app/Theme/index.vue';
+import { LanguageSwitcher } from '@/components/ui/language-switcher';
+import { Logo } from '@/components/ui/logo';
+import { ThemeSwitcher } from '@/components/ui/theme-switcher';
 import Sidebar from '@/components/panel/sidebar.vue';
 import Navbar from '@/components/panel/navbar.vue';
 import App from '@/layouts/app.vue';
@@ -124,7 +124,7 @@ function toggleSidebar() {
                             </ol>
                             <ol class="mt-1.5 inline-flex items-center justify-center gap-x-4">
                                 <li>
-                                    <Theme icon />
+                                    <ThemeSwitcher icon />
                                 </li>
                             </ol>
                         </nav>

@@ -1,7 +1,14 @@
-import { onMounted, ref } from 'vue';
+import { onMounted, onBeforeUnmount, ref, watch } from 'vue';
 
-type Appearance = 'light' | 'dark' | 'system';
+export type Appearance = 'light' | 'dark' | 'system';
 
+// Shared reactive state
+const appearance = ref<Appearance>('system');
+let mediaQueryCleanup: (() => void) | null = null;
+
+/**
+ * Apply theme class to document
+ */
 export function updateTheme(value: Appearance) {
     if (typeof window === 'undefined') {
         return;
@@ -10,7 +17,6 @@ export function updateTheme(value: Appearance) {
     if (value === 'system') {
         const mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
         const systemTheme = mediaQueryList.matches ? 'dark' : 'light';
-
         document.documentElement.classList.toggle('dark', systemTheme === 'dark');
     } else if (value === 'dark') {
         document.documentElement.classList.add('dark');
@@ -19,84 +25,151 @@ export function updateTheme(value: Appearance) {
     }
 }
 
+/**
+ * Set cookie for SSR theme persistence
+ */
 const setCookie = (name: string, value: string, days = 365) => {
     if (typeof document === 'undefined') {
         return;
     }
-
     const maxAge = days * 24 * 60 * 60;
-
     document.cookie = `${name}=${value};path=/;max-age=${maxAge};SameSite=Lax`;
 };
 
-const mediaQuery = () => {
+/**
+ * Get media query for system theme
+ */
+const getMediaQuery = () => {
     if (typeof window === 'undefined') {
         return null;
     }
-
     return window.matchMedia('(prefers-color-scheme: dark)');
 };
 
-const getStoredAppearance = () => {
+/**
+ * Get stored appearance from localStorage
+ */
+const getStoredAppearance = (): Appearance | null => {
     if (typeof window === 'undefined') {
         return null;
     }
-
     return localStorage.getItem('appearance') as Appearance | null;
 };
 
+/**
+ * Handle system theme change event - updates theme when system preference changes
+ * Only applies when appearance is set to 'system'
+ */
 const handleSystemThemeChange = () => {
-    const currentAppearance = getStoredAppearance();
-
+    const currentAppearance = getStoredAppearance() || appearance.value;
     if (currentAppearance === 'system') {
         updateTheme('system');
     }
 };
 
+/**
+ * Setup system theme observer - watches for OS theme changes
+ */
+function setupSystemThemeObserver() {
+    if (typeof window === 'undefined') {
+        return;
+    }
+
+    // Cleanup any existing listener
+    cleanupSystemThemeObserver();
+
+    // Setup new listener
+    const mediaQuery = getMediaQuery();
+    if (mediaQuery) {
+        mediaQuery.addEventListener('change', handleSystemThemeChange);
+        mediaQueryCleanup = () => {
+            mediaQuery.removeEventListener('change', handleSystemThemeChange);
+        };
+    }
+}
+
+/**
+ * Cleanup system theme observer
+ */
+function cleanupSystemThemeObserver() {
+    if (mediaQueryCleanup) {
+        mediaQueryCleanup();
+        mediaQueryCleanup = null;
+    }
+}
+
+/**
+ * Initialize theme - call on app startup
+ * Reads from localStorage/cookie and applies theme
+ */
 export function initializeTheme() {
     if (typeof window === 'undefined') {
         return;
     }
 
-    // Initialize theme from saved preference or default to system...
+    // Get saved preference
     const savedAppearance = getStoredAppearance();
 
     if (savedAppearance) {
+        appearance.value = savedAppearance;
         updateTheme(savedAppearance);
     } else {
+        appearance.value = 'system';
         updateTheme('system');
     }
 
-    // Set up system theme change listener...
-    mediaQuery()?.addEventListener('change', handleSystemThemeChange);
+    // Setup observer for system theme changes
+    setupSystemThemeObserver();
 }
 
-const appearance = ref<Appearance>('system');
-
+/**
+ * Main composable for appearance/theme management
+ * Provides reactive appearance state and update function
+ */
 export function useAppearance() {
+    // Initialize from localStorage on mount
     onMounted(() => {
-        const savedAppearance = localStorage.getItem('appearance') as Appearance | null;
-
+        const savedAppearance = getStoredAppearance();
         if (savedAppearance) {
             appearance.value = savedAppearance;
         }
+        // Ensure observer is setup
+        setupSystemThemeObserver();
     });
 
+    // Cleanup on unmount
+    onBeforeUnmount(() => {
+        // Note: We don't cleanup observer here as other components may need it
+        // It will be cleaned up when a new observer is setup
+    });
+
+    /**
+     * Update appearance - saves to localStorage, cookie, and applies theme
+     */
     function updateAppearance(value: Appearance) {
-        console.log('Updating appearance to:', value);
         appearance.value = value;
 
-        // Store in localStorage for client-side persistence...
-        localStorage.setItem('appearance', value);
+        // Store in localStorage for client-side persistence
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('appearance', value);
+        }
 
-        // Store in cookie for SSR...
+        // Store in cookie for SSR
         setCookie('appearance', value);
 
+        // Apply theme
         updateTheme(value);
     }
+
+    // Watch for appearance changes and re-apply theme
+    watch(appearance, (newValue) => {
+        updateTheme(newValue);
+    });
 
     return {
         appearance,
         updateAppearance,
     };
 }
+
+export default useAppearance;

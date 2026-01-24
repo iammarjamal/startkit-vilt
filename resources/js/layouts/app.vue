@@ -1,7 +1,9 @@
 <script setup>
 import { Head } from '@inertiajs/vue3';
-import Splash from '@/components/app/Splash/index.vue';
-import Offline from '@/components/app/Offline/index.vue';
+import 'vue-sonner/style.css';
+import { Toaster } from '@/components/ui/sonner';
+import { SplashScreen } from '@/components/ui/splash-screen';
+import { OfflineBanner } from '@/components/ui/offline-banner';
 
 const props = defineProps({
     title: {
@@ -24,6 +26,7 @@ const isDesktop = useMediaQuery('(min-width: 768px)');
 </script>
 
 <template>
+
     <Head>
         <title inertia>{{ t('name') }} - {{ title }}</title>
         <meta name="description" :content="desc" />
@@ -34,21 +37,21 @@ const isDesktop = useMediaQuery('(min-width: 768px)');
         <meta property="twitter:description" :content="desc" />
     </Head>
 
-    <Splash />
+    <SplashScreen />
+    <OfflineBanner />
 
     <main>
-        <Offline />
         <div class="desktop flex h-full flex-col" v-if="isDesktop">
             <slot></slot>
         </div>
         <div class="scrollbar-hide phone h-full select-none" v-else>
             <slot />
         </div>
+        <Toaster />
     </main>
 </template>
 
-<i18n lang="json">
-{
+<i18n lang="json">{
     "ar": {
         "name": "رقيم",
         "error_occurred": "حدث خطأ أثناء المعالجة"
@@ -57,8 +60,7 @@ const isDesktop = useMediaQuery('(min-width: 768px)');
         "name": "Rqeim",
         "error_occurred": "An error occurred"
     }
-}
-</i18n>
+}</i18n>
 
 <style scoped>
 .phone * {

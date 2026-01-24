@@ -13,9 +13,12 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, h, DefineComponent } from 'vue';
 import { MotionPlugin } from '@vueuse/motion';
 import { createI18n } from 'vue-i18n';
-import { initializeTheme } from './composables/useAppearance';
+import { initializeAppLifeCycle } from './composables/useLifeCycle';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+
+// Initialize theme and lifecycle before app creation
+initializeAppLifeCycle();
 
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
@@ -37,5 +40,10 @@ createInertiaApp({
     },
     progress: {
         color: '#4B5563',
+    },
+    defaults: {
+        visitOptions: (href, options) => {
+            return { viewTransition: true }
+        },
     },
 });
