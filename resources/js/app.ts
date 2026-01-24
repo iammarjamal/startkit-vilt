@@ -21,7 +21,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 initializeAppLifeCycle();
 
 createInertiaApp({
-    title: (title) => (title ? `${title} - ${appName}` : appName),
+    title: (title) => (title ? `${title}` : appName),
     resolve: (name) => resolvePageComponent(`./pages/${name}.vue`, import.meta.glob<DefineComponent>('./pages/**/*.vue')),
     setup({ el, App, props, plugin }) {
         const locale: string = (props?.initialPage?.props as any)?.app?.locale ?? 'ar';
