@@ -19,7 +19,55 @@
 @plugin 'tailwind-scrollbar';
 
 /* Custom Variants */
+/* Custom Variants */
 @custom-variant dark (&:is(.dark *));
+
+@custom-variant web (&:is(.plt-desktop *));
+
+@custom-variant ios (&:is(.plt-ios *));
+
+@custom-variant android (&:is(.plt-android *));
+
+* {
+    font-family: 'IBM Plex Sans Arabic', sans-serif !important;
+}
+
+button,
+a,
+[role="button"] {
+    touch-action: none !important;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    cursor: pointer;
+}
+
+.active-press:active {
+    opacity: 0.7;
+    transform: scale(0.98);
+    transition: transform 0.05s, opacity 0.05s;
+    /* سرعة خيالية */
+}
+
+[data-vaul-drawer] {
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent;
+}
+
+[data-vaul-drawer]:focus {
+    outline: none !important;
+}
+
+[data-vaul-handle] {
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent;
+}
+
+ion-content {
+    --background: var(--color-background);
+    --font-family: var(--font-family);
+}
+
 
 /* Theme Configuration */
 @theme {
@@ -90,14 +138,17 @@
         from {
             height: 0;
         }
+
         to {
             height: var(--reka-accordion-content-height);
         }
     }
+
     @keyframes accordion-up {
         from {
             height: var(--reka-accordion-content-height);
         }
+
         to {
             height: 0;
         }
@@ -198,9 +249,11 @@
 .text-destructive {
     color: var(--destructive);
 }
+
 .bg-destructive {
     background-color: var(--destructive);
 }
+
 .border-destructive {
     border-color: var(--destructive);
 }
@@ -208,9 +261,11 @@
 .text-success {
     color: var(--success);
 }
+
 .bg-success {
     background-color: var(--success);
 }
+
 .border-success {
     border-color: var(--success);
 }
@@ -218,9 +273,11 @@
 .text-warning {
     color: var(--warning);
 }
+
 .bg-warning {
     background-color: var(--warning);
 }
+
 .border-warning {
     border-color: var(--warning);
 }
@@ -228,9 +285,11 @@
 .text-info {
     color: var(--info);
 }
+
 .bg-info {
     background-color: var(--info);
 }
+
 .border-info {
     border-color: var(--info);
 }
@@ -245,6 +304,7 @@
         background-color 0.15s ease-in-out,
         border-color 0.15s ease-in-out;
 }
+
 .transition-all {
     transition: all 0.15s ease-in-out;
 }
@@ -254,23 +314,28 @@
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
 }
+
 @keyframes slide-in {
     from {
         transform: translateY(-10px);
         opacity: 0;
     }
+
     to {
         transform: translateY(0);
         opacity: 1;
     }
 }
+
 .animate-fade-in {
     animation: fade-in 0.2s ease-out;
 }
+
 .animate-slide-in {
     animation: slide-in 0.3s ease-out;
 }
@@ -284,12 +349,14 @@
 /* 1. Global Direction Logic (LTR/RTL) */
 html {
     --dir: 1;
-    --shadow-x: -20px; /* Shadow on the left by default */
+    --shadow-x: -20px;
+    /* Shadow on the left by default */
 }
 
 html[dir='rtl'] {
     --dir: -1;
-    --shadow-x: 20px; /* Shadow on the right for RTL */
+    --shadow-x: 20px;
+    /* Shadow on the right for RTL */
 }
 
 /* 2. iOS Native Logic (Asymmetric) */
@@ -325,6 +392,7 @@ html[data-os='ios'][data-direction='back']::view-transition-new(root) {
     from {
         transform: translateX(calc(100% * var(--dir)));
     }
+
     to {
         transform: translateX(0);
     }
@@ -334,6 +402,7 @@ html[data-os='ios'][data-direction='back']::view-transition-new(root) {
     from {
         transform: translateX(0);
     }
+
     to {
         transform: translateX(calc(100% * var(--dir)));
     }
@@ -344,6 +413,7 @@ html[data-os='ios'][data-direction='back']::view-transition-new(root) {
         transform: translateX(0);
         filter: brightness(1);
     }
+
     to {
         transform: translateX(calc(-30% * var(--dir)));
         filter: brightness(0.7);
@@ -355,6 +425,7 @@ html[data-os='ios'][data-direction='back']::view-transition-new(root) {
         transform: translateX(calc(-30% * var(--dir)));
         filter: brightness(0.7);
     }
+
     to {
         transform: translateX(0);
         filter: brightness(1);
@@ -365,6 +436,7 @@ html[data-os='ios'][data-direction='back']::view-transition-new(root) {
 html[data-os='android']::view-transition-old(root) {
     animation: fade-out 0.3s ease-in both;
 }
+
 html[data-os='android']::view-transition-new(root) {
     animation: android-zoom-in 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
     transform-origin: center top;
@@ -374,6 +446,7 @@ html[data-os='android'][data-direction='back']::view-transition-old(root) {
     animation: android-zoom-out 0.25s ease-out both;
     z-index: 100;
 }
+
 html[data-os='android'][data-direction='back']::view-transition-new(root) {
     animation: fade-in 0.25s ease-in both;
 }
@@ -384,12 +457,14 @@ html[data-os='android'][data-direction='back']::view-transition-new(root) {
         transform: scale(0.95) translateY(20px);
     }
 }
+
 @keyframes android-zoom-out {
     to {
         opacity: 0;
         transform: scale(0.95) translateY(20px);
     }
 }
+
 @keyframes fade-out {
     to {
         opacity: 0;
@@ -400,9 +475,11 @@ html[data-os='android'][data-direction='back']::view-transition-new(root) {
 html[data-os='desktop']::view-transition-group(root) {
     animation-duration: 0.2s;
 }
+
 html[data-os='desktop']::view-transition-old(root) {
     animation: fade-out 0.15s ease both;
 }
+
 html[data-os='desktop']::view-transition-new(root) {
     animation: fade-in 0.15s ease both;
 }

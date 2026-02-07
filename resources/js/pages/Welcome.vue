@@ -11,9 +11,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useI18n } from 'vue-i18n';
 import { toast } from 'vue-sonner';
 import App from '@/layouts/app.vue';
+import { router } from '@inertiajs/vue3';
 
 const { t } = useI18n();
-
 // Show welcome toast on mounted
 onMounted(() => {
     toast.success(t('toast.welcome'), {
@@ -23,6 +23,10 @@ onMounted(() => {
     toast.success(t('toast.welcome'), {
         description: t('toast.welcomeDesc'),
     });
+
+    setTimeout(() => {
+        router.reload();
+    }, 3000);
 });
 
 const features = [

@@ -1,5 +1,6 @@
 <script setup>
 import { Head } from '@inertiajs/vue3';
+import { IonApp, IonContent } from '@ionic/vue';
 import 'vue-sonner/style.css';
 import { Toaster } from '@/components/ui/sonner';
 import { SplashScreen } from '@/components/ui/splash-screen';
@@ -42,10 +43,14 @@ const isDesktop = useMediaQuery('(min-width: 768px)');
 
     <main>
         <div class="desktop flex h-full flex-col" v-if="isDesktop">
-            <slot></slot>
+            <slot />
         </div>
         <div class="scrollbar-hide phone h-full select-none" v-else>
-            <slot />
+            <ion-app>
+                <ion-content>
+                    <slot />
+                </ion-content>
+            </ion-app>
         </div>
         <Toaster />
     </main>

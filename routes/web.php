@@ -9,19 +9,32 @@ Route::prefix(LaravelLocalization::setLocale())->middleware(['localeSessionRedir
         // Home Route
         Route::prefix('/')->name('home.')->group(
             function () {
-                
-                Route::get('/', function () {
-                    return inertia('Welcome');
-                })->name('index');
-                
-            }
+
+            Route::get('/', function () {
+                if (Auth::check()) {
+                    return redirect()->route('dashboard.index');
+                }
+
+                return to_route('auth.index');
+
+            })->name('index');
+
+        }
         );
 
         // Auth Routes
         Route::prefix('auth')->name('auth.')->middleware(['guest'])->group(
             function () {
-                //
-            }
+
+            Route::get('/', function () {
+                return inertia('auth/index');
+            })->name('index');
+
+            Route::get('/verify', function () {
+                return inertia('auth/verify');
+            })->name('verify');
+
+        }
         );
 
         // Dashboard Routes

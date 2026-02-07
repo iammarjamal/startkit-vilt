@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html class="transition-all duration-1000 scroll-smooth" lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" @class(['dark'=> ($appearance ?? 'system') == 'dark'])>
+<html class="transition-all duration-1000 scroll-smooth" lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+    dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" @class(['dark' => ($appearance ?? 'system') == 'dark'])>
 
 <head>
     <!-- Base Meta -->
     @if(!empty($page))
-    @inertiaHead
+        @inertiaHead
     @endif
 
     <meta property="og:type" content="website" />
@@ -14,7 +15,7 @@
 
     <meta charset="UTF-8" />
     <meta name="viewport"
-        content="initial-scale=1, maximum-scale=5, minimum-scale=1, width=device-width" />
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <!-- Base Meta -->
 
@@ -28,7 +29,8 @@
 
     <!-- PWA Meta -->
     <link rel="manifest" href="{{ asset('build/manifest.webmanifest') }}">
-    <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
 
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -40,7 +42,7 @@
 
     {{-- Inline script to detect system dark mode preference and apply it immediately --}}
     <script>
-        (function() {
+        (function () {
             const appearance = '{{ $appearance ?? "system" }}';
 
             if (appearance === 'system') {
@@ -69,7 +71,7 @@
 
 <body class="font-sans antialiased bg-light dark:bg-dark">
     @if(!empty($page))
-    @inertia
+        @inertia
     @endif
     <!-- OR -->
     @yield('slot')
