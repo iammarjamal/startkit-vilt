@@ -25,15 +25,7 @@ Route::prefix(LaravelLocalization::setLocale())->middleware(['localeSessionRedir
         // Auth Routes
         Route::prefix('auth')->name('auth.')->middleware(['guest'])->group(
             function () {
-
-            Route::get('/', function () {
-                return inertia('auth/index');
-            })->name('index');
-
-            Route::get('/verify', function () {
-                return inertia('auth/verify');
-            })->name('verify');
-
+                //
         }
         );
 
