@@ -11,21 +11,25 @@ Route::prefix(LaravelLocalization::setLocale())->middleware(['localeSessionRedir
             function () {
 
             Route::get('/', function () {
-                if (Auth::check()) {
-                    return redirect()->route('dashboard.index');
-                }
-
-                return to_route('auth.index');
-
+                return inertia('Welcome');
             })->name('index');
 
+            // Route::get('/', function () {
+            //     if (Auth::check()) {
+            //         return redirect()->route('dashboard.index');
+            //     }
+    
+            //     return to_route('auth.index');
+    
+            // })->name('index');
+    
         }
         );
 
         // Auth Routes
         Route::prefix('auth')->name('auth.')->middleware(['guest'])->group(
             function () {
-                //
+            //
         }
         );
 
