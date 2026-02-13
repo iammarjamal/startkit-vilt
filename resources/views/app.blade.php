@@ -59,6 +59,7 @@
         }
     </style>
     @vite(['resources/js/app.ts'])
+    @routes
     <!-- Assets -->
 </head>
 

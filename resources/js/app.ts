@@ -14,6 +14,7 @@ import { createApp, h, DefineComponent } from 'vue';
 import { MotionPlugin } from '@vueuse/motion';
 import { createI18n } from 'vue-i18n';
 import { initializeAppLifeCycle } from './composables/useLifeCycle';
+import { ZiggyVue } from 'ziggy-js';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -35,6 +36,7 @@ createInertiaApp({
         createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(i18n)
+            .use(ZiggyVue)
             .use(MotionPlugin)
             .mount(el);
     },
